@@ -62,7 +62,7 @@ def logout():
 
 DATABASE = 'database.db'
 def get_db():
-    db = psycopg2.connect("dbname='database' user='postgres' host='localhost' password='580430'")
+    db = psycopg2.connect("dbname='postgres' user='yz3054' host='104.196.175.120' password='h7fmz'")
     
     return db
 
