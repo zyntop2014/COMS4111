@@ -1,0 +1,38 @@
+{% extends "mainlayout.html" %}
+{% block content %}
+<h2 align="center"> Customer Dinning Information </h2>
+<div class="table-responsive-vertical shadow-z-1">
+  <!-- Table starts here -->
+  <table id="table" class="table table-hover table-mc-light-blue">
+    <thead>
+      <tr>
+       
+        <th>Customer_ID</th>
+         <th>First_name</th>
+         <th> Last_name </th>
+         <th> Restaurant_ID </th>
+         <th> Restrautant_name </th>
+         <th>Dinning Times</th>
+
+      </tr>
+    </thead>
+    <tbody>
+
+      {% for row in rows %}
+      <tr>
+        <td>{{row[0]}}</td>
+        <td>{{row[1]}}</td>
+         <td>{{row[2]}}</td>
+        <td>{{row[3]}}</td>
+        <td>{{row[4]}}</td>
+         <td>{{row[5]}}</td>
+         
+
+
+      </tr>
+      {% endfor %}
+
+    </tbody>
+  </table>
+</div>  
+{% endblock %}

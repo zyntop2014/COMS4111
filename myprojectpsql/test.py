@@ -93,6 +93,16 @@ def waitlist():
 def restaurant():
     return render_template('restaurant.html')
 
+
+@app.route('/dinning')
+@login_required
+def dinning():
+    con = get_db()
+    cur = con.cursor()
+    cur.execute("SELECT c.customer_id, c.first_name, c.last_name, r.restaurant_id, r.name, t.count FROM (SELECT p.customer_id, p.restaurant_id, COUNT(p.party_datetime) FROM party p, restaurant r WHERE p.restaurant_id = r.restaurant_id GROUP BY p.customer_id, p.restaurant_id ORDER BY customer_id, restaurant_id) t, customer c,restaurant r WHERE t.customer_id = c.customer_id AND r.restaurant_id = t.restaurant_id")
+    rows = cur.fetchall();
+    return render_template('dinning.html', rows= rows)
+
 @app.route('/customer')
 @login_required
 def customer():
@@ -104,7 +114,7 @@ def customer():
 def list():
     con = get_db()
     cur = con.cursor()
-    cur.execute("select * from customer")
+    cur.execute("SELECT * FROM customer")
     rows = cur.fetchall();
     return render_template("customerlist.html", rows=rows)
 
