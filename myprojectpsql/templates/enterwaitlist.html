@@ -1,46 +1,26 @@
-<html>
-   <body>
-      
-      <form action = "{{ url_for('addrecwaitlist') }}" method = "POST">
-         <h3>Waitlist Information</h3>
+{% extends "mainlayout.html" %}
+{% block content %}
+<form action = "{{ url_for('addrecwaitlist') }}" method = "POST">
+  <h3>Waitlist Information</h3>
 
-         restaurant_id<br>
-         <input type = "INT" name = "restaurant_id" /><br>
+  restaurant_id<br>
+  <input type = "INT" name = "restaurant_id" /><br>
 
-         customer_id<br>
-         <input type = "INT" name = "customer_id" /></br>
-         
-         
-         party_datetime<br>
-         <input type = "TIMESTAMP" name = "party_datetime" /><br>
-         
-         listed_at<br>
-         <input type = "TIMESTAMP" name = "listed_at" /><br>
+  customer_id<br>
+  <input type = "INT" name = "customer_id" /></br>
 
-         unlisted_at<br>
-         <input type = "TIMESTAMP" name = "unlisted_at" /><br>
-         
 
-         <input type = "submit" value = "submit" /><br>
+  party_datetime<br>
+  <input type = "TIMESTAMP" name = "party_datetime" /><br>
 
-      </form>
+  listed_at<br>
+  <input type = "TIMESTAMP" name = "listed_at" /><br>
 
-         <hr>
+  unlisted_at<br>
+  <input type = "TIMESTAMP" name = "unlisted_at" /><br>
 
-         <div class="container">
 
-        <!-- Jumbotron Header -->
-        <header class="jumbotron hero-spacer">
-           
-       
-            <h1 align= "left"> {{ msg }} </h1>
-            <p align="left"><a  href= "{{ url }}" class="btn btn-primary btn-large"> Gp back to homepage</a>
-            </p>
-        </header>
+  <input type = "submit" value = "submit" /><br>
 
-     
-
-    </div>
-      
-   </body>
-</html>
+</form>
+{% endblock %}

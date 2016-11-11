@@ -1,6 +1,5 @@
-<html>
-   <body>
-      
+{% extends "mainlayout.html" %}
+{% block content %}
       <form action = "{{ url_for('deleterecadmin') }}" method = "POST">
          <h3>Admin Information</h3>
 
@@ -20,6 +19,4 @@
          <input type = "text" name = "pin" /><br>
          <input type = "submit" value = "submit" /><br>
       </form>
-      
-   </body>
-</html>
+{% endblock %}
