@@ -34,11 +34,11 @@ def login():
 
         db = get_db()
         cur=db.cursor()
-        cur.execute("select * from administrators")
+        cur.execute("select * from administrator")
         rows= cur.fetchall();
 
         for row in rows:
-            if request.form['username'] == row[0] and request.form['password'] == row[3]:
+            if request.form['username'] == row[2] and request.form['password'] == row[3]:
                user_password = True  
 
         if request.form['username'] == 'admin' and request.form['password'] == 'admin':
@@ -128,6 +128,15 @@ def tablelist():
     rows = cur.fetchall();
     return render_template("tablelist.html", rows=rows)
 
+@app.route('/waitlistlist')
+@login_required
+def waitlistlist():
+    con = get_db()
+    cur = con.cursor()
+    cur.execute("select * from waitlist")
+    rows = cur.fetchall();
+    return render_template("waitlistlist.html", rows=rows)
+
 @app.route('/adminlist')
 @login_required
 def adminlist():
@@ -159,6 +168,13 @@ def partylist():
 @login_required
 def new_admin():
     return render_template('enteradmin.html', url = 'admin')
+
+
+@app.route('/enterwaitlist')
+@login_required
+def new_waitlist():
+    return render_template('enterwaitlist.html', url = 'index')
+
 
 @app.route('/entercustomer', methods=['GET', 'POST'])
 @login_required
@@ -250,6 +266,35 @@ def addrecparty():
 
         finally:
             return render_template("enterparty.html", msg=msg, url = "waitlist")
+            con.close()
+
+@app.route('/addrecwaitlist', methods=['POST', 'GET'])
+@login_required
+def addrecwaitlist():
+    if request.method == 'POST':
+
+        
+        try:
+            
+            restaurant_id = request.form['restaurant_id']
+            customer_id= request.form['customer_id']
+            party_datetime= request.form['party_datetime']
+            listed_at= request.form['listed_at']
+            unlisted_at= request.form['unlisted_at']
+          
+            
+
+            with get_db() as con:
+                cur = con.cursor()    
+                cur.execute("INSERT INTO waitlist VALUES (%s, %s, %s, %s, %s)", (restaurant_id, customer_id, party_datetime, listed_at, unlisted_at))
+                con.commit()
+                msg = "Record successfully added"
+        except:
+            con.rollback()
+            msg = "error in insert operation"
+
+        finally:
+            return render_template("enterwaitlist.html", msg=msg, url = "/")
             con.close()
 
 @app.route('/addrecnotification', methods=['POST', 'GET'])
@@ -440,6 +485,30 @@ def deleteadmin():
 
         finally:
             return render_template("result.html", msg=msg, url = "admin")
+            con.close()
+
+@app.route('/deletewaitlist', methods=['POST', 'GET'])
+@login_required
+def deletewaitlist():
+    if request.method == 'POST':
+
+        msg = "Record successfully Deleted"
+        try:
+            restaurant_id= request.form['restaurant_id']
+            customer_id = request.form['customer_id']
+            party_datetime = request.form['party_datetime']
+         
+            with get_db() as con:
+                cur = con.cursor()    
+                cur.execute("DELETE  from waitlist where restaurant_id= %s and customer_id = %s and party_datetime = %s ", (restaurant_id, customer_id, party_datetime))
+                con.commit()
+                msg = "Record successfully Deleted"
+        except:
+            con.rollback()
+            msg = "error in delete operation"
+
+        finally:
+            return render_template("result.html", msg=msg, url = "/")
             con.close()
 
 @app.route('/deleteparty', methods=['POST', 'GET'])
