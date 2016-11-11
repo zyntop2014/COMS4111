@@ -125,7 +125,7 @@ def list():
 def retaurantlist():
     con = get_db()
     cur = con.cursor()
-    cur.execute("select * from restaurant")
+    cur.execute("SELECT r.restaurant_id, r.name, AVG(w.unlisted_at - w.listed_at) AS avg_waiting FROM waitlist w, restaurant r WHERE w.restaurant_id = r.restaurant_id GROUP BY r.restaurant_id ORDER BY avg_waiting")
     rows = cur.fetchall();
     return render_template("restaurantlist.html", rows=rows)
 
