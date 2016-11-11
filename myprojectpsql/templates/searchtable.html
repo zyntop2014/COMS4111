@@ -1,0 +1,39 @@
+<html>
+   <body>
+      
+      <form action = "{{ url_for('searchtable') }}" method = "POST">
+         <h3>Enter Table size (>=) </h3>      
+         Table_size<br>
+         <input type = "INT" name = "seats" /></br>  
+         Restaurant_name<br>
+         <input type = "TEXT" name = "restaurant_name" /></br>   
+         <input type = "submit" value = "submit" /><br>
+      </form>
+
+<hr>
+         <table border = 1>
+         <thead>
+            <td>Restaurant_id</td>
+            <td>Restaurant_name</td>
+            <td>Table_id</td>
+            <td>Table_size</td>
+           
+         </thead>
+
+         {% for row in rows1 %}
+            <tr>
+               <td>{{row[0]}}</td>
+               <td>{{row[1]}}</td>
+               <td> {{row[2]}}</td>
+               <td>{{row[3]}}</td>
+               
+            </tr>
+         {% endfor %}
+      </table>
+
+      
+
+      
+      
+   </body>
+</html>

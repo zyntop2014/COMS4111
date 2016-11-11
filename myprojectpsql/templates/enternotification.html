@@ -1,0 +1,46 @@
+<html>
+   <body>
+      
+      <form action = "{{ url_for('addrecnotification') }}" method = "POST">
+         <h3>Admin Information</h3>
+
+         body<br>
+         <input type = "text" name = "body" /><br>
+
+         type<br>
+         <input type = "text" name = "type" /></br>
+         
+         
+         sent_at<br>
+         <input type = "TIMESTAMP" name = "sent_at" /><br>
+         
+         restaurant_id<br>
+         <input type = "INT" name = "restaurant_id" /><br>
+
+         customer_id<br>
+         <input type = "INT" name = "customer_id" /><br>
+         
+
+         <input type = "submit" value = "submit" /><br>
+
+      </form>
+
+         <hr>
+
+         <div class="container">
+
+        <!-- Jumbotron Header -->
+        <header class="jumbotron hero-spacer">
+           
+       
+            <h1 align= "left"> {{ msg }} </h1>
+            <p align="left"><a  href= "{{ url }}" class="btn btn-primary btn-large"> Gp back to homepage</a>
+            </p>
+        </header>
+
+     
+
+    </div>
+      
+   </body>
+</html>

@@ -1,0 +1,63 @@
+<html>
+   <body>
+      
+      <form action = "{{ url_for('search') }}" method = "POST">
+         <h3>Enter Customer Information</h3>
+         customer_id<br>
+         <input type = "INT" name = "customer_id" /></br>    
+         <input type = "submit" value = "submit" /><br>
+      </form>
+
+
+         <table border = 1>
+         <thead>
+            <td>customer_id</td>
+            <td>First_name</td>
+            <td>Last_name</td>
+            <td>Phone_number</td>
+            <td>customer_email</td>
+         </thead>
+
+         {% for row in rows1 %}
+            <tr>
+               <td>{{row[0]}}</td>
+               <td>{{row[1]}}</td>
+               <td> {{row[2]}}</td>
+               <td>{{row[3]}}</td>
+               <td>{{row[4]}}</td>
+            </tr>
+         {% endfor %}
+      </table>
+
+      <hr>
+
+      <form action = "{{ url_for('search2') }}" method = "POST">
+         <h3>Enter Customer Information</h3>
+         customer_id<br>
+         <input type = "INT" name = "customer_id" /></br>    
+         <input type = "submit" value = "submit" /><br>
+      </form>
+
+
+         <table border = 1>
+         <thead>
+            <td>customer_id</td>
+            <td>First_name</td>
+            <td>Last_name</td>
+            <td>Phone_number</td>
+            <td>customer_email</td>
+         </thead>
+
+         {% for row in rows2 %}
+            <tr>
+               <td>{{row[0]}}</td>
+               <td>{{row[1]}}</td>
+               <td> {{row[2]}}</td>
+               <td>{{row[3]}}</td>
+               <td>{{row[4]}}</td>
+            </tr>
+         {% endfor %}
+      </table>
+      
+   </body>
+</html>
