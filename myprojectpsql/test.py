@@ -34,11 +34,11 @@ def login():
 
         db = get_db()
         cur=db.cursor()
-        cur.execute("select * from administrators")
+        cur.execute("select * from administrator")
         rows= cur.fetchall();
 
         for row in rows:
-            if request.form['username'] == row[0] and request.form['password'] == row[3]:
+            if request.form['username'] == row[2] and request.form['password'] == row[3]:
                user_password = True  
 
         if request.form['username'] == 'admin' and request.form['password'] == 'admin':
