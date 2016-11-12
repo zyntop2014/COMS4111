@@ -45,7 +45,6 @@ def login():
             session['logged_in'] = True
             #flash('You were logged in.')
             return redirect(url_for('index'))
-           
         else:
             error = 'Invalid Credentials. Please try again.'
     return render_template('login.html', error=error)
@@ -59,6 +58,7 @@ def logout():
 
 def get_db():
     db = psycopg2.connect("dbname='database' user='postgres' host='localhost' password='580430'")
+#    db = psycopg2.connect("dbname='postgres' user='yz3054' host='104.196.175.120' password='h7fmz'")
     return db
 
 @app.teardown_appcontext
@@ -88,6 +88,16 @@ def waitlist():
 def restaurant():
     return render_template('restaurant.html')
 
+
+@app.route('/dinning')
+@login_required
+def dinning():
+    con = get_db()
+    cur = con.cursor()
+    cur.execute("SELECT c.customer_id, c.first_name, c.last_name, r.restaurant_id, r.name, t.count FROM (SELECT p.customer_id, p.restaurant_id, COUNT(p.party_datetime) FROM party p, restaurant r WHERE p.restaurant_id = r.restaurant_id GROUP BY p.customer_id, p.restaurant_id ORDER BY customer_id, restaurant_id) t, customer c,restaurant r WHERE t.customer_id = c.customer_id AND r.restaurant_id = t.restaurant_id")
+    rows = cur.fetchall();
+    return render_template('dinning.html', rows= rows)
+
 @app.route('/customer')
 @login_required
 def customer():
@@ -99,7 +109,7 @@ def customer():
 def list():
     con = get_db()
     cur = con.cursor()
-    cur.execute("select * from customer")
+    cur.execute("SELECT * FROM customer")
     rows = cur.fetchall();
     return render_template("customerlist.html", rows=rows)
 
@@ -110,7 +120,7 @@ def list():
 def retaurantlist():
     con = get_db()
     cur = con.cursor()
-    cur.execute("select * from restaurant")
+    cur.execute("SELECT r.restaurant_id, r.name, AVG(w.unlisted_at - w.listed_at) AS avg_waiting FROM waitlist w, restaurant r WHERE w.restaurant_id = r.restaurant_id GROUP BY r.restaurant_id ORDER BY avg_waiting")
     rows = cur.fetchall();
     return render_template("restaurantlist.html", rows=rows)
 
