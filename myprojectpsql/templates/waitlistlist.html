@@ -45,6 +45,30 @@
 
         </td>
 
+        <td>
+
+          <form action="{{ url_for('edit_waitlist') }}" method=get >
+            <input type = hidden name = "restaurant_id" value = "{{row[0]}}"/>
+            <input type = hidden name = "customer_id" value = "{{row[1]}}"/>
+            <input type = hidden name = "party_datetime" value = "{{row[2]}}"/>
+            <input type=submit value = update></input>
+          </form>
+
+
+        </td>
+
+        {% if row[4] is none %}
+        <td>
+          <form action="{{ url_for('unlistcustomer') }}" method=post class=deletewaitlist>
+            <input type = hidden name = "restaurant_id" value = "{{row[0]}}"/>
+            <input type = hidden name = "customer_id" value = "{{row[1]}}"/>
+            <input type = hidden name = "party_datetime" value = "{{row[2]}}"/>
+            <input type=submit value = Unlist></input>
+          </form>
+        </td>
+        {% endif %}
+
+
       </tr>
       {% endfor %}
 

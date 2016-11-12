@@ -1,0 +1,20 @@
+{% extends "layouts/base.html" %}
+{% block content %}
+<form action = "{{ url_for('update_notification') }}" method = "POST">
+  <h3>Admin Information</h3>
+  body<br>
+  <input type = "text" name = "body" value = "{{ notification[0] }}" /><br>
+  type<br>
+  <input type = "text" name = "type" value = "{{ notification[1] }}" /></br>
+  sent_at<br>
+  {{ notification[2] }}
+  <input type = "hidden" name = "sent_at" value = "{{ notification[2] }}" /><br>
+  restaurant_id<br>
+  {{ notification[3] }}
+  <input type = "hidden" name = "restaurant_id" value = "{{ notification[3] }}" /><br>
+  customer_id<br>
+  {{ notification[4] }}
+  <input type = "hidden" name = "customer_id" value = "{{ notification[4] }}" /><br>
+  <input type = "submit" value = "submit"  /><br>
+</form>
+{% endblock %}
