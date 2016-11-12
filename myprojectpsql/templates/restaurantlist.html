@@ -21,25 +21,9 @@
          <td>{{row[2]}}</td>
 
 
-        <td>
-
-          <form action="{{ url_for('deleterestaurant') }}" method=post class=deleterestaurant>
-            <input type = hidden name = "id" value = "{{row[0]}}"/>
-            <input type=submit value = Delete></input>
-          </form>
+       
 
 
-        </td>
-
-        <td>
-
-          <form action="{{ url_for('updaterestaurant') }}" method=post class=updaterestaurant>
-            <input type = hidden name = "old_id" value = "{{row[0]}}"/>
-            <input type=submit value = Update></input>
-          </form>
-
-
-        </td>
       </tr>
       {% endfor %}
 
