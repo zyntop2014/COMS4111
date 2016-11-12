@@ -1,6 +1,16 @@
 {% extends "mainlayout.html" %}
 {% block content %}
+
 <h2 align="center"> Waitlist Information </h2>
+
+<form  method = "GET">
+  <h3>Filter by Restaurant Id</h3>
+  <input type = "INT" name = "restaurant_id" />
+  <input type="checkbox" name="waiting" value="Yes">Customer still in the waitlist<br>
+  <input type = "submit" value = "submit" /><br>
+</form>
+
+<br>
 <div class="table-responsive-vertical shadow-z-1">
   <!-- Table starts here -->
   <table id="table" class="table table-hover table-mc-light-blue">

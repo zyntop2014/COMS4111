@@ -22,7 +22,7 @@ cur.execute('DROP TABLE IF EXISTS waitlist')
 
 cur.execute('CREATE TABLE restaurant (restaurant_id INT primary key, name TEXT)')
 cur.execute('CREATE TABLE customer (customer_id INT primary key, first_name TEXT, last_name TEXT, phone_number TEXT, customer_email TEXT NOT NULL, UNIQUE(customer_email))')
-cur.execute('CREATE TABLE administrator (admin_id INT primary key, email TEXT NOT NULL, UNIQUE(email), user_name TEXT NOT NULL, UNIQUE(user_name), encypted_password TEXT)')
+cur.execute('CREATE TABLE administrator (admin_id INT primary key, email TEXT NOT NULL, UNIQUE(email), user_name TEXT NOT NULL, UNIQUE(user_name), encrypted_password TEXT)')
 cur.execute('CREATE TABLE restaurant_table(table_id INT, seats INT NOT NULL CHECK (seats> 0), restaurant_id INT, PRIMARY KEY (table_id, restaurant_id), FOREIGN KEY (restaurant_id) REFERENCES restaurant ON DELETE CASCADE)')
 cur.execute('CREATE TABLE manage(restaurant_id INT, admin_id INT, PRIMARY KEY (admin_id, restaurant_id), FOREIGN KEY (restaurant_id) REFERENCES restaurant, FOREIGN KEY (admin_id) REFERENCES administrator)')
 cur.execute('CREATE TABLE notification(body TEXT NOT NULL, type TEXT NOT NULL, sent_at TIMESTAMP,restaurant_id INT , customer_id INT,  PRIMARY KEY (sent_at, restaurant_id, customer_id), FOREIGN KEY (restaurant_id) REFERENCES restaurant ON DELETE CASCADE, FOREIGN KEY (customer_id) REFERENCES customer ON DELETE CASCADE)')

@@ -5,6 +5,7 @@ import sqlite3 as sql
 from functools import wraps
 
 import psycopg2
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -34,17 +35,13 @@ def login():
 
         db = get_db()
         cur=db.cursor()
-        cur.execute("select * from administrator")
-        rows= cur.fetchall();
-
-        for row in rows:
-            if request.form['username'] == row[2] and request.form['password'] == row[3]:
-               user_password = True  
+        cur.execute("select * from administrator WHERE user_name=%s AND encrypted_password=%s", (request.form['username'], request.form['password']))
+        admin = cur.fetchone();
 
         if request.form['username'] == 'admin' and request.form['password'] == 'admin':
             user_password = True 
 
-        if user_password:
+        if user_password or (admin is not None):
             session['logged_in'] = True
             #flash('You were logged in.')
             return redirect(url_for('index'))
@@ -60,10 +57,8 @@ def logout():
     flash('You were logged out.')
     return redirect(url_for('welcome'))
 
-DATABASE = 'database.db'
 def get_db():
     db = psycopg2.connect("dbname='database' user='postgres' host='localhost' password='580430'")
-    
     return db
 
 @app.teardown_appcontext
@@ -133,7 +128,16 @@ def tablelist():
 def waitlistlist():
     con = get_db()
     cur = con.cursor()
-    cur.execute("select * from waitlist")
+    if request.values.has_key('restaurant_id') and len(request.values['restaurant_id']) > 0:
+        if request.values.has_key('waiting'):
+            cur.execute("select * from waitlist WHERE restaurant_id=%s AND unlisted_at IS NULL ORDER BY listed_at", request.values['restaurant_id'])
+        else:
+            cur.execute("select * from waitlist WHERE restaurant_id=%s ORDER BY listed_at", request.values['restaurant_id'])
+    else:
+        if request.values.has_key('waiting'):
+            cur.execute("select * from waitlist WHERE unlisted_at IS NULL ORDER BY listed_at")
+        else:
+            cur.execute("select * from waitlist ORDER BY listed_at")
     rows = cur.fetchall();
     return render_template("waitlistlist.html", rows=rows)
 
@@ -169,11 +173,21 @@ def partylist():
 def new_admin():
     return render_template('enteradmin.html', url = 'admin')
 
+@app.route('/waitlistcustomer')
+@login_required
+def add_customer_waitlist():
+    con = get_db()
+    cur = con.cursor()
+    cur.execute("select * from restaurant")
+    restaurants = cur.fetchall()
+    cur.execute("select * from customer")
+    customers = cur.fetchall()
+    return render_template('waitlistcustomer.html', restaurants=restaurants, customers=customers, url = 'index')
 
 @app.route('/enterwaitlist')
 @login_required
 def new_waitlist():
-    return render_template('enterwaitlist.html', url = 'index')
+    return render_template('enterwaitlist.html', url='index')
 
 
 @app.route('/entercustomer', methods=['GET', 'POST'])
@@ -237,14 +251,36 @@ def addrecadmin():
             return render_template("enteradmin.html", msg=msg, url = "admin")
             con.close()
 
+@app.route('/add_customer_to_waitlist', methods=['POST'])
+@login_required
+def add_customer_to_waitlist():
+    if request.method == 'POST':
+        try:
+            restaurant_id = request.form['restaurant_id']
+            customer_id= request.form['customer_id']
+            party_size = request.form['party_size']
+            party_datetime= datetime.datetime.now()
+            listed_at= datetime.datetime.now()
+
+            with get_db() as con:
+                cur = con.cursor()
+                cur.execute("INSERT INTO party (size, customer_id, party_datetime) VALUES (%s, %s, %s)", (party_size, customer_id, party_datetime))
+                cur.execute("INSERT INTO waitlist (restaurant_id, customer_id, party_datetime, listed_at) VALUES (%s, %s, %s, %s)", (restaurant_id, customer_id, party_datetime, listed_at))
+                con.commit()
+                msg = "Record successfully added"
+        except:
+            con.rollback()
+            msg = "error in insert operation"
+
+        finally:
+            return render_template("waitlistlist.html", url = "/")
+            con.close()
+
 @app.route('/addrecparty', methods=['POST', 'GET'])
 @login_required
 def addrecparty():
     if request.method == 'POST':
-
-        
         try:
-            
             size = request.form['size']
             customer_id= request.form['customer_id']
             party_datetime= request.form['party_datetime']
@@ -275,7 +311,6 @@ def addrecwaitlist():
 
         
         try:
-            
             restaurant_id = request.form['restaurant_id']
             customer_id= request.form['customer_id']
             party_datetime= request.form['party_datetime']
