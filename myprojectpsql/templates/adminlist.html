@@ -31,6 +31,16 @@
 
         </td>
 
+          <td>
+
+          <form action="{{ url_for('updateadmin') }}" method=post class=updateadmin>
+            <input type = hidden name = "old_id" value = "{{row[0]}}"/>
+            <input type=submit value = Update></input>
+          </form>
+
+
+        </td>
+
       </tr>
       {% endfor %}
 
