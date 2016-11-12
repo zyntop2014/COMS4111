@@ -57,8 +57,8 @@ def logout():
     return redirect(url_for('welcome'))
 
 def get_db():
-    db = psycopg2.connect("dbname='database' user='postgres' host='localhost' password='580430'")
-#    db = psycopg2.connect("dbname='postgres' user='yz3054' host='104.196.175.120' password='h7fmz'")
+#   db = psycopg2.connect("dbname='database' user='postgres' host='localhost' password='580430'")
+    db = psycopg2.connect("dbname='postgres' user='yz3054' host='104.196.175.120' password='h7fmz'")
     return db
 
 @app.teardown_appcontext
@@ -190,8 +190,10 @@ def add_customer_waitlist():
     cur = con.cursor()
     cur.execute("select * from restaurant")
     restaurants = cur.fetchall()
+    con.commit()
     cur.execute("select * from customer")
     customers = cur.fetchall()
+    con.commit()
     return render_template('waitlistcustomer.html', restaurants=restaurants, customers=customers, url = 'index')
 
 @app.route('/enterwaitlist')
@@ -225,6 +227,7 @@ def new_manage():
 @login_required
 def new_table():
     return render_template('entertable.html')
+
 
 
 
@@ -675,6 +678,76 @@ def deletecustomer():
         finally:
             return render_template("result.html", msg=msg, url = "customer")
             con.close()
+
+@app.route('/updatecustomer', methods=['POST', 'GET'])
+@login_required
+def updatecustomer():
+    old_id = request.form['old_id']
+    return render_template("updatecustomer.html", old_id = old_id)
+
+@app.route('/addrecupdatecustomer', methods=['POST', 'GET'])
+@login_required
+def addrecupdatecustomer():
+    if request.method == 'POST':
+
+        msg = "Record successfully added"
+        try:
+            customer_id = request.form['update_id']
+            first_name= request.form['first_nm']
+            last_name = request.form['last_nm']
+            phone= request.form['phone']
+            email = request.form['email']
+            old_id = request.form['old_id']
+           
+
+            with get_db() as con:
+                cur = con.cursor()    
+                cur.execute("UPDATE customer SET customer_id = %s, first_name = %s, last_name = %s, phone_number = %s, customer_email = %s WHERE customer_id = %s", (customer_id, first_name, last_name, phone, email, old_id))
+                con.commit()
+                msg = "Record successfully updated"
+        except:
+            con.rollback()
+            msg = "error in update operation"
+
+        finally:
+            return render_template("customer.html")
+            con.close()
+   
+
+@app.route('/updateadmin', methods=['POST', 'GET'])
+@login_required
+def updateadmin():
+    old_id = request.form['old_id']
+    return render_template("updateadmin.html", old_id = old_id)
+
+@app.route('/addrecupdateadmin', methods=['POST', 'GET'])
+@login_required
+def addrecupdateadmin():
+    if request.method == 'POST':
+
+        msg = "Record successfully added"
+        try:
+            admin_id = request.form['update_id']
+            user_name= request.form['user_name']
+            password = request.form['password']
+            email= request.form['email']
+            old_id = request.form['old_id']
+           
+
+            with get_db() as con:
+                cur = con.cursor()    
+                cur.execute("UPDATE administrator SET admin_id = %s, user_name = %s, email =%s, encrypted_password= %s WHERE admin_id = %s", (admin_id, user_name, email, password, old_id))
+                con.commit()
+                msg = "Record successfully updated"
+        except:
+            con.rollback() 
+            msg = "error in update operation"
+
+        finally:
+            return render_template("admin.html")
+            con.close()
+        
+
 
 
 

@@ -1,0 +1,24 @@
+{% extends "mainlayout.html" %}
+{% block content %}
+<form action = "{{ url_for('addrecupdateadmin') }}" method = "POST">
+  <h3>Enter Customer Information</h3>
+
+  <input type = hidden name = "old_id" value = "{{old_id}}"/>
+
+  Admin_ID<br>
+  <input type = "INT" name = "update_id" /><br>
+
+  email<br>
+  <input type = "text" name = "email" /></br>
+
+  User_name<br>
+  <input type = "text" name = "user_name" /></br>
+
+  Password<br>
+  <input type = "text" name = "password" /></br>
+
+  
+  <input type = "submit" value = "submit" /><br>
+</form>
+
+{% endblock %}
