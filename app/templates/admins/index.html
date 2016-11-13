@@ -1,4 +1,4 @@
-{% extends "mainlayout.html" %}
+{% extends "layouts/base.html" %}
 {% block content %}
 <h2 align="center"> Administrators Information </h2>
 <div class="table-responsive-vertical shadow-z-1">
@@ -10,11 +10,9 @@
         <th><b>Email</b></th>
         <th><b>User_name</b></th>
         <th><b>Password</b></th>
-
       </tr>
     </thead>
     <tbody>
-
       {% for row in rows %}
       <tr>
         <td > {{row[0]}}</td>
@@ -22,29 +20,20 @@
         <td> {{row[2]}}</td>
         <td>{{row[3]}}</td>
         <td>
-
-          <form action="{{ url_for('deleteadmin') }}" method=post class=deleteadmin>
+          <form action="{{ url_for('admins.delete') }}" method=post class=deleteadmin>
             <input type = hidden name = "id" value = "{{row[0]}}"/>
             <input type=submit value = Delete></input>
           </form>
-
-
         </td>
-
           <td>
-
-          <form action="{{ url_for('updateadmin') }}" method=post class=updateadmin>
-            <input type = hidden name = "old_id" value = "{{row[0]}}"/>
-            <input type=submit value = Update></input>
+          <form action="{{ url_for('admins.edit') }}" method=get>
+            <input type = hidden name = "id" value = "{{row[0]}}"/>
+            <input type=submit value = Edit></input>
           </form>
-
-
         </td>
-
       </tr>
       {% endfor %}
-
     </tbody>
   </table>
-</div>  
+</div>
 {% endblock %}

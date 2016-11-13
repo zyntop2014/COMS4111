@@ -1,0 +1,17 @@
+{% extends "layouts/base.html" %}
+{% block content %}
+<form action = "{{ url_for('admins.update') }}" method = "POST">
+  <h3>Enter Admin Information</h3>
+  <input type = hidden name = "old_id" value = "{{ admin[0] }}" />
+  Admin_ID<br>
+  <input type = "INT" name = "update_id" value = "{{ admin[0] }}" /><br>
+  email<br>
+  <input type = "text" name = "email" value = "{{ admin[1] }}" /></br>
+  User_name<br>
+  <input type = "text" name = "user_name" value = "{{ admin[2] }}" /></br>
+  Password<br>
+  <input type = "password" name = "password" value = "{{ admin[3] }}" /></br>
+  <input type = "submit" value = "submit" /><br>
+</form>
+
+{% endblock %}

@@ -64,32 +64,11 @@ def close_connection(exception):
         db.close()
 
 
-@app.route('/admin')
-@login_required
-def admin():
-    return render_template('admin.html')
-
 @app.route('/waitlist')
 @login_required
 def waitlist():
     return render_template('waitlist.html')
 
-
-@app.route('/adminlist')
-@login_required
-def adminlist():
-    con = get_db()
-    cur = con.cursor()
-    cur.execute("select * from administrator ORDER BY admin_id")
-    rows = cur.fetchall();
-    return render_template("adminlist.html", rows=rows)
-
-
-
-@app.route('/enteradmin')
-@login_required
-def new_admin():
-    return render_template('enteradmin.html', url = 'admin')
 
 @app.route('/waitlistcustomer')
 @login_required
@@ -104,47 +83,11 @@ def add_customer_waitlist():
     con.commit()
     return render_template('waitlistcustomer.html', restaurants=restaurants, customers=customers, url = 'index')
 
-
-
-
-
-
-
-
 @app.route('/entermanage')
 @login_required
 def new_manage():
     return render_template('entermanage.html', url = 'admin')
 
-
-
-
-@app.route('/addrecadmin', methods=['POST', 'GET'])
-@login_required
-def addrecadmin():
-    if request.method == 'POST':
-
-        
-        try:
-            
-            idn = request.form['id']
-            email = request.form['email']
-            nm = request.form['nm']
-            pin= request.form['pin']
-            
-
-            with get_db() as con:
-                cur = con.cursor()    
-                cur.execute("INSERT INTO administrator VALUES (%s, %s, %s, %s)", (idn,email, nm, pin))
-                con.commit()
-                msg = "Record successfully added"
-        except:
-            con.rollback()
-            msg = "error in insert operation"
-
-        finally:
-            return render_template("enteradmin.html", msg=msg, url = "admin")
-            con.close()
 
 @app.route('/add_customer_to_waitlist', methods=['POST'])
 @login_required
@@ -170,11 +113,6 @@ def add_customer_to_waitlist():
         finally:
             return render_template("waitlistlist.html", url = "/")
             con.close()
-
-
-
-
-
 
 @app.route('/addrecmanage', methods=['POST', 'GET'])
 @login_required
@@ -203,30 +141,6 @@ def addrecmanage():
 
 
 
-
-@app.route('/deleteadmin', methods=['POST', 'GET'])
-@login_required
-def deleteadmin():
-    if request.method == 'POST':
-
-        msg = "Record successfully Deleted"
-        try:
-            id_admin= request.form['id']
-            print id_admin
-        
-            with get_db() as con:
-                cur = con.cursor()    
-                cur.execute("DELETE  from administrator where admin_id= %s ", (id_admin,))
-                con.commit()
-                msg = "Record successfully Deleted"
-        except:
-            con.rollback()
-            msg = "error in delete operation"
-
-        finally:
-            return render_template("result.html", msg=msg, url = "admin")
-            con.close()
-
 @app.route('/unlistcustomer', methods=['POST', 'GET'])
 @login_required
 def unlistcustomer():
@@ -248,43 +162,4 @@ def unlistcustomer():
 
         finally:
             return render_template("result.html", msg=msg, url = "/")
-            con.close()
-
-
-
-
-
-    
-
-@app.route('/updateadmin', methods=['POST', 'GET'])
-@login_required
-def updateadmin():
-    old_id = request.form['old_id']
-    return render_template("updateadmin.html", old_id = old_id)
-
-@app.route('/addrecupdateadmin', methods=['POST', 'GET'])
-@login_required
-def addrecupdateadmin():
-    if request.method == 'POST':
-
-        msg = "Record successfully added"
-        try:
-            admin_id = request.form['update_id']
-            user_name= request.form['user_name']
-            password = request.form['password']
-            email= request.form['email']
-            old_id = request.form['old_id']
-           
-
-            with get_db() as con:
-                cur = con.cursor()    
-                cur.execute("UPDATE administrator SET admin_id = %s, user_name = %s, email =%s, encrypted_password= %s WHERE admin_id = %s", (admin_id, user_name, email, password, old_id))
-                con.commit()
-                msg = "Record successfully updated"
-        except:
-            con.rollback() 
-            msg = "error in update operation"
-
-        finally:
-            return render_template("admin.html")
             con.close()

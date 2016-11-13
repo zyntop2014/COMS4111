@@ -1,4 +1,4 @@
-{% extends "mainlayout.html" %}
+{% extends "layouts/base.html" %}
 {% block content %}
 <!-- Page Features -->
 <div class="row text-center">
@@ -6,9 +6,9 @@
     <div class="thumbnail">
       <img src="" alt="" height="400" width="420">
       <div class="caption">
-        <h3>Add more administrators</h3>
+        <h3>Add administrator</h3>
         <p>
-        <a href="enteradmin" class="btn btn-primary">Add Administrator</a> 
+        <a href={{ url_for('admins.new') }} class="btn btn-primary">Add Administrator</a> 
         </p>
       </div>
     </div>
@@ -21,7 +21,7 @@
       <div class="caption">
         <h3>Show Admin Information</h3>
         <p>
-        <a href="adminlist" class="btn btn-primary">Display</a> 
+        <a href={{ url_for('admins.index') }} class="btn btn-primary">Display</a> 
         </p>
       </div>
     </div>

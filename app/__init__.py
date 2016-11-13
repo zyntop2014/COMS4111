@@ -29,6 +29,7 @@ from app.views.party import mod_party
 from app.views.customer import mod_customer
 from app.views.restaurant import mod_restaurant
 from app.views.table import mod_table
+from app.views.admin import mod_admin
 
 # Register blueprint(s)
 app.register_blueprint(mod_notification)
@@ -38,6 +39,7 @@ app.register_blueprint(mod_party)
 app.register_blueprint(mod_customer)
 app.register_blueprint(mod_restaurant)
 app.register_blueprint(mod_table)
+app.register_blueprint(mod_admin)
 # include other route file here 
 #app.register_blueprint(<your file>)
 
