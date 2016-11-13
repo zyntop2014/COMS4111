@@ -1,4 +1,4 @@
-{% extends "mainlayout.html" %}
+{% extends "layouts/base.html" %}
 {% block content %}
 <h2 align="center"> Restaurant Information </h2>
 <div class="table-responsive-vertical shadow-z-1">
@@ -6,48 +6,32 @@
   <table id="table" class="table table-hover table-mc-light-blue">
     <thead>
       <tr>
-        <th><b>Restaurant_ID</b></th>
-        <th><b>Restaurant_Name</b></th>
-        
-
+        <th><b>Restaurant ID</b></th>
+        <th><b>Restaurant Name</b></th>
+        <th> <b>Average Waiting Time </b> </th>
       </tr>
     </thead>
     <tbody>
-
       {% for row in rows %}
       <tr>
         <td>{{row[0]}}</td>
         <td>{{row[1]}}</td>
-     
-
-
+        <td>{{row[2]}}</td>
         <td>
-
-          <form action="{{ url_for('deleterestaurant') }}" method=post class=deleterestaurant>
+          <form action="{{ url_for('restaurants.delete') }}" method=post class=deleterestaurant>
             <input type = hidden name = "restaurant_id" value = "{{row[0]}}"/>
             <input type=submit value = Delete></input>
           </form>
-
-
-
-
         </td>
-
         <td>
-
-          <form action="{{ url_for('updaterestaurant') }}" method=post class=updaterestaurant>
-            <input type = hidden name = "old_id" value = "{{row[0]}}"/>
-            <input type=submit value = Update></input>
+          <form action="{{ url_for('restaurants.edit') }}" method=get >
+            <input type = hidden name = "id" value = "{{row[0]}}"/>
+            <input type=submit value = Edit></input>
           </form>
-
-
         </td>
-
-        
       </tr>
       {% endfor %}
-
     </tbody>
   </table>
-</div>  
+</div>
 {% endblock %}

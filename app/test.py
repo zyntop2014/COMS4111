@@ -75,29 +75,6 @@ def waitlist():
     return render_template('waitlist.html')
 
 
-@app.route('/restaurant')
-@login_required
-def restaurant():
-    return render_template('restaurant.html')
-
-
-@app.route('/restaurantlist')
-@login_required
-def retaurantlist():
-    con = get_db()
-    cur = con.cursor()
-    cur.execute("SELECT r.restaurant_id, r.name, AVG(w.unlisted_at - w.listed_at) AS avg_waiting FROM waitlist w, restaurant r WHERE w.restaurant_id = r.restaurant_id GROUP BY r.restaurant_id ORDER BY avg_waiting")
-    rows = cur.fetchall();
-    return render_template("restaurantlist.html", rows=rows)
-
-@app.route('/restaurantlist2')
-@login_required
-def retaurantlist2():
-    con = get_db()
-    cur = con.cursor()
-    cur.execute("SELECT restaurant_id, name FROM restaurant ORDER BY restaurant_id")
-    rows = cur.fetchall();
-    return render_template("restaurantlist2.html", rows=rows)
 
 @app.route('/tablelist')
 @login_required
@@ -156,13 +133,6 @@ def new_table():
     return render_template('entertable.html')
 
 
-
-
-
-@app.route('/enterrestaurant')
-@login_required
-def new_restaurant():
-    return render_template('enterrestaurant.html')
 
 @app.route('/addrecadmin', methods=['POST', 'GET'])
 @login_required
@@ -271,32 +241,6 @@ def addrectable():
             con.close()
 
 
-@app.route('/addrecrestaurant', methods=['POST', 'GET'])
-@login_required
-def addrecrestaurant():
-    if request.method == 'POST':
-
-        msg = "Record successfully added"
-        try:
-            
-            idn = request.form['id']
-            nm = request.form['nm']
-            
-
-            with get_db() as con:
-                cur = con.cursor()    
-                cur.execute("INSERT INTO restaurant VALUES (%s, %s)", (idn,nm))
-                con.commit()
-                msg = "Record successfully added"
-        except:
-            con.rollback()
-            msg = "error in insert operation"
-
-        finally:
-            return render_template("enterrestaurant.html", msg=msg, url = "restaurant")
-            con.close()
-
-
 @app.route('/searchtable', methods=['GET', 'POST'])
 @login_required
 def searchtable():
@@ -387,30 +331,6 @@ def deletetable():
             con.close()
 
 
-@app.route('/deleterestaurant', methods=['POST', 'GET'])
-@login_required
-def deleterestaurant():
-    if request.method == 'POST':
-
-        #msg = "Record successfully Deleted"
-        try:
-            restaurant_id= request.form['restaurant_id']
-          
-         
-        
-
-            with get_db() as con:
-                cur = con.cursor()    
-                cur.execute("DELETE  from restaurant where restaurant_id= %s ", (restaurant_id,))
-                con.commit()
-                msg = "Record successfully Deleted"
-        except:
-            con.rollback()
-            msg = "error in delete operation"
-
-        finally:
-            return render_template("result.html", msg=msg, url = "restaurant")
-            con.close()
 
 
 
@@ -432,8 +352,6 @@ def addrecupdatetable():
             seats= request.form['seats']
             restaurant_id = request.form['restaurant_id']
             old_id = request.form['old_id']
-           
-
             with get_db() as con:
                 cur = con.cursor()    
                 cur.execute("UPDATE restaurant_table SET table_id = %s, seats = %s, restaurant_id = %s WHERE table_id = %s", (table_id, seats, restaurant_id, old_id))
@@ -479,32 +397,4 @@ def addrecupdateadmin():
 
         finally:
             return render_template("admin.html")
-            con.close()
-
-@app.route('/updaterestaurant', methods=['POST', 'GET'])
-@login_required
-def updaterestaurant():
-    old_id = request.form['old_id']
-    return render_template("updaterestaurant.html", old_id = old_id)
-
-@app.route('/addrecupdaterestaurant', methods=['POST', 'GET'])
-@login_required
-def addrecupdaterestaurant():
-    if request.method == 'POST':
-        msg = "Record successfully added"
-        try:
-            restaurant_id = request.form['update_id']
-            name= request.form['name']
-            old_id = request.form['old_id']
-            with get_db() as con:
-                cur = con.cursor()    
-                cur.execute("UPDATE restaurant SET restaurant_id = %s, name = %s WHERE restaurant_id = %s", (restaurant_id, name, old_id))
-                con.commit()
-                msg = "Record successfully updated"
-        except:
-            con.rollback() 
-            msg = "error in update operation"
-
-        finally:
-            return render_template("restaurant.html")
             con.close()

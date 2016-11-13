@@ -1,15 +1,11 @@
-{% extends "mainlayout.html" %}
+{% extends "layouts/base.html" %}
 {% block content %}
-<form action = "{{ url_for('addrecrestaurant') }}" method = "POST">
+<form action = "{{ url_for('customers.create') }}" method = "POST">
   <h3>Restaurant Information</h3>
   Restaurant_ID<br>
   <input type = "INT" name = "id" /></br>
-
   Restaurant_Name<br>
   <input type = "text" name = "nm" /><br>
-
-
-
   <input type = "submit" value = "submit" /><br>
 </form>
 {% endblock %}
