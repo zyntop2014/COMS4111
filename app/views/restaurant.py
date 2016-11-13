@@ -73,7 +73,7 @@ def delete():
 @login_required
 def update():
     if request.method == 'POST':
-        msg = "Record successfully added"
+        msg = "Record successfully updated"
         connection = db.engine.connect()
         trans = connection.begin()
         try:

@@ -13,8 +13,6 @@
       </div>
     </div>
   </div>
-
-
   <div class="col-md-3 col-sm-6 hero-feature">
     <div class="thumbnail">
       <img src="" alt="" height="400" width="420">
@@ -26,29 +24,29 @@
       </div>
     </div>
   </div>
-
-
-
-
 </div>
 <!-- /.row -->
-
 <!-- Page Features -->
 <div class="row text-center">
-
   <div class="col-md-3 col-sm-6 hero-feature">
     <div class="thumbnail">
-      <img src="" alt="" height="400" width="420">
       <div class="caption">
         <h3>Add Manage</h3>
-
         <p>
-        <a href="entermanage" class="btn btn-primary">Add Administrator</a> 
+        <a href={{ url_for('manage.new') }} class="btn btn-primary">Add Administrator</a> 
         </p>
-
       </div>
     </div>
   </div>
-
+  <div class="col-md-3 col-sm-6 hero-feature">
+    <div class="thumbnail">
+      <div class="caption">
+        <h3>Management List</h3>
+        <p>
+        <a href={{ url_for('manage.index') }} class="btn btn-primary">Management list</a> 
+        </p>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}
