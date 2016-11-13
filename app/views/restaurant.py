@@ -13,7 +13,7 @@ def main():
 @mod_restaurant.route('/')
 @login_required
 def index():
-    cur = db.engine.execute("SELECT r.restaurant_id, r.name, AVG(w.unlisted_at - w.listed_at) AS avg_waiting FROM waitlist w, restaurant r WHERE w.restaurant_id = r.restaurant_id GROUP BY r.restaurant_id ORDER BY avg_waiting")
+    cur = db.engine.execute("SELECT r.restaurant_id, r.name, AVG(w.unlisted_at - w.listed_at) AS avg_waiting FROM restaurant r LEFT JOIN waitlist w ON r.restaurant_id = w.restaurant_id GROUP BY r.restaurant_id ORDER BY avg_waiting")
     rows = cur.fetchall();
     return render_template("restaurants/index.html", rows=rows)
 
@@ -25,8 +25,10 @@ def new():
 @mod_restaurant.route('/edit', methods=['GET'])
 @login_required
 def edit():
-    old_id = request.form['old_id']
-    return render_template("restaurants/edit.html", old_id = old_id)
+    id = request.values['id']
+    cur = db.engine.execute("SELECT * FROM restaurant WHERE restaurant_id = %s LIMIT 1", id)
+    restaurant = cur.fetchone()
+    return render_template("restaurants/edit.html", restaurant=restaurant)
 
 @mod_restaurant.route('/create', methods=['POST'])
 @login_required
@@ -37,7 +39,7 @@ def create():
         trans = connection.begin()
         try:
             idn = request.form['id']
-            nm = request.form['nm']
+            nm = request.form['name']
             connection.execute("INSERT INTO restaurant VALUES (%s, %s)", (idn,nm))
             trans.commit()
             msg = "Record successfully added"
