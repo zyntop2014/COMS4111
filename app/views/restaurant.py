@@ -10,17 +10,33 @@ mod_restaurant = Blueprint('restaurants', __name__, url_prefix='/restaurants', t
 def main():
     return render_template('restaurants/main.html')
 
-@mod_restaurant.route('/')
+@mod_restaurant.route('/', methods = ['GET', 'POST'])
 @login_required
 def index():
-    if request.values.has_key('restaurant_id') and len(request.values['restaurant_id']) > 0:
-        cur = db.engine.execute("SELECT * FROM (SELECT r.restaurant_id, r.name, AVG(w.unlisted_at - w.listed_at) AS avg_waiting FROM restaurant r LEFT JOIN waitlist w ON r.restaurant_id = w.restaurant_id GROUP BY r.restaurant_id ORDER BY avg_waiting) AS r WHERE r.restaurant_id = %s", request.values['restaurant_id'])
-        rows = cur.fetchall();
+    if request.method == "POST":
+        sort_type= request.form.get('sort_type')
+        method= request.form.get('method')
+        print sort_type
+        if sort_type == "customer number":
+            st = "SELECT r.restaurant_id, r.name, AVG(w.unlisted_at - w.listed_at) AS avg_waiting, COUNT (w.customer_id) As avg_customer FROM restaurant r LEFT JOIN waitlist w ON r.restaurant_id = w.restaurant_id GROUP BY r.restaurant_id ORDER BY avg_customer" + "  " +  method
+            cur = db.engine.execute(st)
+            rows = cur.fetchall();
+        if sort_type == "waiting time":
+            st = "SELECT r.restaurant_id, r.name, AVG(w.unlisted_at - w.listed_at) AS avg_waiting, COUNT (w.customer_id) As avg_customer FROM restaurant r LEFT JOIN waitlist w ON r.restaurant_id = w.restaurant_id GROUP BY r.restaurant_id ORDER BY avg_waiting" + "  " +  method
+            cur = db.engine.execute(st)
+            rows = cur.fetchall();
         return render_template("restaurants/index.html", rows=rows)
+            
     else:
-        cur = db.engine.execute("SELECT r.restaurant_id, r.name, AVG(w.unlisted_at - w.listed_at) AS avg_waiting FROM restaurant r LEFT JOIN waitlist w ON r.restaurant_id = w.restaurant_id GROUP BY r.restaurant_id ORDER BY avg_waiting")
-        rows = cur.fetchall();
-        return render_template("restaurants/index.html", rows=rows)
+        if request.values.has_key('restaurant_id') and len(request.values['restaurant_id']) > 0:
+            cur = db.engine.execute("SELECT * FROM (SELECT r.restaurant_id, r.name, AVG(w.unlisted_at - w.listed_at) AS avg_waiting, COUNT (w.customer_id) As avg_customer  FROM restaurant r LEFT JOIN waitlist w ON r.restaurant_id = w.restaurant_id GROUP BY r.restaurant_id ORDER BY avg_waiting) AS r WHERE r.restaurant_id = %s", request.values['restaurant_id'])
+            rows = cur.fetchall();
+            return render_template("restaurants/index.html", rows=rows)
+        else:
+            cur = db.engine.execute("SELECT r.restaurant_id, r.name, AVG(w.unlisted_at - w.listed_at) AS avg_waiting, COUNT (w.customer_id) As avg_customer FROM restaurant r LEFT JOIN waitlist w ON r.restaurant_id = w.restaurant_id GROUP BY r.restaurant_id ORDER BY avg_waiting")
+            rows = cur.fetchall();
+            return render_template("restaurants/index.html", rows=rows)
+
 
 @mod_restaurant.route('/new')
 @login_required
