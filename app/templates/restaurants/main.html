@@ -32,7 +32,7 @@
       <div class="caption">
         <h3>Add new tables </h3>
         <p>
-        <a href="entertable" class="btn btn-primary">Add new</a> 
+        <a href={{ url_for('tables.new') }} class="btn btn-primary">Add new</a> 
         </p>
       </div>
     </div>
@@ -43,7 +43,7 @@
       <div class="caption">
         <h3>Show Restaurant Table Information</h3>
         <p>
-        <a href="tablelist" class="btn btn-primary">Display</a> 
+        <a href={{ url_for('tables.index') }} class="btn btn-primary">Display</a> 
         </p>
       </div>
     </div>
@@ -54,7 +54,7 @@
       <div class="caption">
         <h3>Search Restaurant Table With Size</h3>
         <p>
-        <a href="searchtable" class="btn btn-primary"> Search</a> 
+        <a href={{ url_for('tables.search') }} class="btn btn-primary"> Search</a> 
         </p>
       </div>
     </div>

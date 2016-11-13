@@ -1,0 +1,29 @@
+{% extends "layouts/base.html" %}
+{% block content %}
+<form action = "{{ url_for('tables.search') }}" method = "POST">
+  <h3>Enter Table size (>=) </h3>
+  Table_size<br>
+  <input type = "INT" name = "seats" /></br>  
+
+  <input type = "submit" value = "submit" /><br>
+</form>
+<hr>
+<div class="table-responsive-vertical shadow-z-1">
+  <table border = 1 class="table table-hover table-mc-light-blue">
+    <thead>
+      <td>Restaurant_id</td>
+      <td>Restaurant_name</td>
+      <td>Table_id</td>
+      <td>Table_size</td>
+    </thead>
+    {% for row in rows1 %}
+    <tr>
+      <td>{{row[0]}}</td>
+      <td>{{row[1]}}</td>
+      <td> {{row[2]}}</td>
+      <td>{{row[3]}}</td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}

@@ -1,4 +1,4 @@
-{% extends "mainlayout.html" %}
+{% extends "layouts/base.html" %}
 {% block content %}
 <h2 align="center"> Table Information </h2>
 <div class="table-responsive-vertical shadow-z-1">
@@ -6,46 +6,35 @@
   <table id="table" class="table table-hover table-mc-light-blue">
     <thead>
       <tr>
-        <th><b>Restaurant_ID </b></th>
-        <th><b>Restaurant_name</b></th>
-        <th><b>Table_ID</b></th>
-        <th><b> Seats</b></th>
-
+        <th><b>Restaurant ID </b></th>
+        <th><b>Restaurant name</b></th>
+        <th><b>Table ID</b></th>
+        <th><b>Seats</b></th>
       </tr>
     </thead>
     <tbody>
-
       {% for row in rows %}
       <tr>
         <td>{{row[0]}}</td>
         <td>{{row[1]}}</td>
         <td> {{row[2]}}</td>
         <td> {{row[3]}}</td>
-
-
         <td>
-
-          <form action="{{ url_for('deletetable') }}" method=post class=deletetable>
+          <form action="{{ url_for('tables.delete') }}" method=post class=deletetable>
             <input type = hidden name = "table_id" value = "{{row[2]}}"/>
             <input type=submit value = Delete></input>
           </form>
-
-
         </td>
-
         <td>
-          <form action="{{ url_for('updatetable') }}" method=post class=updatetable>
-             <input type = hidden name = "old_id" value = "{{row[2]}}"/>
-            <input type=submit value = Update></input>
+          <form action="{{ url_for('tables.edit') }}" method=get>
+             <input type = hidden name = "table_id" value = "{{row[2]}}"/>
+             <input type = hidden name = "restaurant_id" value = "{{row[0]}}"/>
+            <input type=submit value = Edit></input>
           </form>
-
-
         </td>
-
       </tr>
       {% endfor %}
-
     </tbody>
   </table>
-</div>  
+</div>
 {% endblock %}

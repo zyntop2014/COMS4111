@@ -1,0 +1,16 @@
+{% extends "layouts/base.html" %}
+{% block content %}
+<form action = "{{ url_for('tables.update') }}" method = "POST">
+  <h3>Enter Table Information</h3>
+  <input type = hidden name = "old_id" value = "{{table[0]}}"/>
+  <input type = hidden name = "old_restaurant_id" value = "{{table[2]}}"/>
+  Table ID<br>
+  <input type = "INT" name = "update_id" value = "{{table[0]}}" /><br>
+  Seats<br>
+  <input type = "INT" name = "seats" value = "{{table[1]}}"/><br>
+  Resturant id<br>
+  <input type = "INT" name = "restaurant_id" value = "{{table[2]}}" /></br>
+  <input type = "submit" value = "Update" /><br>
+</form>
+
+{% endblock %}
