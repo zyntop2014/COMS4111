@@ -7,6 +7,8 @@
   <input type = "submit" value = "submit" /><br>
 </form>
 
+
+<h3 > Sort Restaurant Information </h3>
 <form action = "{{ url_for('restaurants.index') }}" method = "POST">
   <select name="sort_type">
     <option value="customer number"> customer number </option>
@@ -17,11 +19,13 @@
     <option value="ASC">  ASC </option>
   </select> 
 
-  <input type = "submit" value = "submit" /><br>
+  <input type = "submit" value = "Sort" /><br>
 
   
 </form>
 
+
+<br>
 
 
 
