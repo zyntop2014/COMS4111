@@ -8,9 +8,16 @@ mod_manage = Blueprint('manage', __name__, url_prefix='/manage', template_folder
 @mod_manage.route('/')
 @login_required
 def index():
-    cur = db.engine.execute("select m.admin_id, a.email, m.restaurant_id, r.name from manage m, administrator a, restaurant r WHERE m.admin_id = a.admin_id AND m.restaurant_id = r.restaurant_id")
-    rows = cur.fetchall()
-    return render_template('manage/index.html', rows=rows)
+    if request.values.has_key('admin_id') and len(request.values['admin_id']) > 0:
+        admin_id = request.values['admin_id']
+        print admin_id
+        cur = db.engine.execute("with s (admin_id, email, restaurant_id, name) as (select m.admin_id, a.email, m.restaurant_id, r.name from manage m, administrator a, restaurant r WHERE m.admin_id = a.admin_id AND m.restaurant_id = r.restaurant_id) select * from s where admin_id = %s", (admin_id,))
+        rows = cur.fetchall()
+        return render_template('manage/index.html', rows=rows)
+    else:
+        cur = db.engine.execute("select m.admin_id, a.email, m.restaurant_id, r.name from manage m, administrator a, restaurant r WHERE m.admin_id = a.admin_id AND m.restaurant_id = r.restaurant_id")
+        rows = cur.fetchall()
+        return render_template('manage/index.html', rows=rows)
 
 @mod_manage.route('/new')
 @login_required
