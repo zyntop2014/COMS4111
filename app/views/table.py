@@ -8,9 +8,15 @@ mod_table = Blueprint('tables', __name__, url_prefix='/tables', template_folder=
 @mod_table.route('/index')
 @login_required
 def index():
-    cur = db.engine.execute("select restaurant.restaurant_id, restaurant.name, restaurant_table.table_id , restaurant_table.seats from restaurant_table, restaurant where restaurant_table.restaurant_id = restaurant.restaurant_id")
-    rows = cur.fetchall();
-    return render_template("tables/index.html", rows=rows)
+    if request.values.has_key('restaurant_id') and len(request.values['restaurant_id']) > 0:
+        restaurant_id= request.values['restaurant_id']
+        cur = db.engine.execute("with s(restaurant_id, name, table_id, seats) as (select restaurant.restaurant_id, restaurant.name, restaurant_table.table_id , restaurant_table.seats from restaurant_table, restaurant where restaurant_table.restaurant_id = restaurant.restaurant_id) select * from s where restaurant_id =%s ", restaurant_id)
+        rows = cur.fetchall();
+        return render_template("tables/index.html", rows=rows)
+    else:
+        cur = db.engine.execute("select restaurant.restaurant_id, restaurant.name, restaurant_table.table_id , restaurant_table.seats from restaurant_table, restaurant where restaurant_table.restaurant_id = restaurant.restaurant_id")
+        rows = cur.fetchall();
+        return render_template("tables/index.html", rows=rows)
 
 @mod_table.route('/search', methods=['GET', 'POST'])
 @login_required
