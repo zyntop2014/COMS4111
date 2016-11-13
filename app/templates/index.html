@@ -1,4 +1,4 @@
-{% extends "mainlayout.html" %}
+{% extends "layouts/base.html" %}
 {% block content %}
 <!-- Jumbotron Header -->
 <header class="jumbotron hero-spacer">
@@ -16,7 +16,7 @@
           <h3>Add New Party</h3>
 
           <p>
-          <a href="enterparty" class="btn btn-primary">Add Party</a> 
+          <a href={{ url_for('party.new') }} class="btn btn-primary">Add Party</a> 
           </p>
 
         </div>
@@ -30,7 +30,7 @@
         <div class="caption">
           <h3>Show Party</h3>
           <p>
-          <a href="partylist" class="btn btn-primary">Display</a> 
+          <a href={{ url_for('party.index') }} class="btn btn-primary">Display</a> 
           </p>
         </div>
       </div>
@@ -48,7 +48,7 @@
         <div class="caption">
           <h3>New Notification</h3>
           <p>
-          <a href={{ url_for('new_notification') }} class="btn btn-primary">Add Notification</a> 
+          <a href={{ url_for('notifications.new') }} class="btn btn-primary">Add Notification</a> 
           </p>
         </div>
       </div>
@@ -79,7 +79,7 @@
           <h3>Add New Waitlist</h3>
 
           <p>
-          <a href="enterwaitlist" class="btn btn-primary">Add Waitlist</a> 
+          <a href={{ url_for('waitlists.new') }} class="btn btn-primary">Add Waitlist</a> 
           </p>
 
         </div>
@@ -93,7 +93,7 @@
         <div class="caption">
           <h3>Show Waitlist </h3>
           <p>
-          <a href="waitlistlist" class="btn btn-primary">Display</a> 
+          <a href={{ url_for('waitlists.index') }} class="btn btn-primary">Display</a> 
           </p>
         </div>
       </div>

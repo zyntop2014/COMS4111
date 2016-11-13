@@ -1,30 +1,21 @@
-{% extends "mainlayout.html" %}
+{% extends "layouts/base.html" %}
 {% block content %}
-<form action = "{{ url_for('addrecparty') }}" method = "POST">
-  <h3>Enter Party Information</h3>
-
+<form action = "{{ url_for('party.create') }}" method = "POST">
+  <h3>New Party</h3>
   size<br>
   <input type = "INT" name = "size" /><br>
-
   customer_id<br>
   <input type = "INT" name = "customer_id" /><br>
-
   party_datetime<br>
   <input type = "timestamp" name = "party_datetime" /><br>
-
   table_id<br>
   <input type = "INT" name = "table_id" /><br>
-
   restaurant_id<br>
   <input type = "INT" name = "restaurant_id" /><br>
-
   seated_datetime<br>
   <input type = "timestamp" name = "seated_datetime" /><br>
-
   finish_at <br>
   <input type = "timestamp" name = "finish_at" /><br>
   <input type = "submit" value = "submit" /><br>
-
 </form>
-
 {% endblock %}

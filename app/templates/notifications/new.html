@@ -1,13 +1,13 @@
 {% extends "layouts/base.html" %}
 {% block content %}
-<form action = "{{ url_for('create_notification') }}" method = "POST">
+<form action = "{{ url_for('notifications.create') }}" method = "POST">
   <h3>Notification Information</h3>
   body<br>
   <input type = "text" name = "body" /><br>
   type<br>
   <input type = "text" name = "type" /></br>
   sent_at<br>
-  <input type = "TIMESTAMP" name = "sent_at" /><br>
+  <input type = "text" name = "sent_at" /><br>
   restaurant_id<br>
   <input type = "INT" name = "restaurant_id" /><br>
   customer_id<br>

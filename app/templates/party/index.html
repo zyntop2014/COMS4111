@@ -1,4 +1,4 @@
-{% extends "mainlayout.html" %}
+{% extends "layouts/base.html" %}
 {% block content %}
 <!-- Page Content -->
 <h2 align="center"> Party Information </h2>
@@ -27,21 +27,22 @@
         <td> {{row[4]}}</td>
         <td>{{row[5]}}</td>
         <td> {{row[6]}}</td>
-
         <td>
-
-          <form action="{{ url_for('deleteparty') }}" method=post class=deleteparty>
+          <form action="{{ url_for('party.delete') }}" method=post class=deleteparty>
             <input type = hidden name = "customer_id" value = "{{row[1]}}"/>
             <input type = hidden name = "party_time" value = "{{row[2]}}"/>
             <input type=submit value = Delete></input>
           </form>
-
-
         </td>
-
+        <td>
+          <form action="{{ url_for('party.edit') }}" method=get>
+            <input type = hidden name = "customer_id" value = "{{row[1]}}"/>
+            <input type = hidden name = "party_datetime" value = "{{row[2]}}"/>
+            <input type=submit value = Edit></input>
+          </form>
+        </td>
       </tr>
       {% endfor %}
-
     </tbody>
   </table>
 </div>  

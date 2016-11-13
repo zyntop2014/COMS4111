@@ -1,15 +1,11 @@
 from flask import Flask, render_template, request, g, redirect, url_for, session, flash
-
 from functools import wraps
-
 import psycopg2
 from datetime import datetime
 import pdb
 
 app = Flask(__name__)
 app.secret_key = 'my precious'
-
-from views.notifications import *
 
 # login required decorator
 def login_required(f):
@@ -58,7 +54,7 @@ def logout():
 
 def get_db():
 #   db = psycopg2.connect("dbname='database' user='postgres' host='localhost' password='580430'")
-    db = psycopg2.connect("dbname='postgres' user='yz3054' host='104.196.175.120' password='h7fmz'")
+#    db = psycopg2.connect("dbname='postgres' user='yz3054' host='104.196.175.120' password='h7fmz'")
     return db
 
 @app.teardown_appcontext
@@ -67,10 +63,6 @@ def close_connection(exception):
     if db is not None:
         db.close()
 
-@app.route('/')
-@login_required
-def index():
-    return render_template('index.html')
 
 @app.route('/admin')
 @login_required
@@ -142,23 +134,6 @@ def tablelist():
     rows = cur.fetchall();
     return render_template("tablelist.html", rows=rows)
 
-@app.route('/waitlistlist')
-@login_required
-def waitlistlist():
-    con = get_db()
-    cur = con.cursor()
-    if request.values.has_key('restaurant_id') and len(request.values['restaurant_id']) > 0:
-        if request.values.has_key('waiting'):
-            cur.execute("select * from waitlist WHERE restaurant_id=%s AND unlisted_at IS NULL ORDER BY listed_at", request.values['restaurant_id'])
-        else:
-            cur.execute("select * from waitlist WHERE restaurant_id=%s ORDER BY listed_at", request.values['restaurant_id'])
-    else:
-        if request.values.has_key('waiting'):
-            cur.execute("select * from waitlist WHERE unlisted_at IS NULL ORDER BY listed_at")
-        else:
-            cur.execute("select * from waitlist ORDER BY listed_at")
-    rows = cur.fetchall();
-    return render_template("waitlistlist.html", rows=rows)
 
 @app.route('/adminlist')
 @login_required
@@ -170,14 +145,6 @@ def adminlist():
     return render_template("adminlist.html", rows=rows)
 
 
-@app.route('/partylist')
-@login_required
-def partylist():
-    con = get_db()
-    cur = con.cursor()
-    cur.execute("select * from party")
-    rows = cur.fetchall();
-    return render_template("partylist.html", rows=rows)
 
 @app.route('/enteradmin')
 @login_required
@@ -197,23 +164,7 @@ def add_customer_waitlist():
     con.commit()
     return render_template('waitlistcustomer.html', restaurants=restaurants, customers=customers, url = 'index')
 
-@app.route('/enterwaitlist')
-@login_required
-def new_waitlist():
-    return render_template('enterwaitlist.html', url='index')
 
-
-@app.route('/editwaitlist', methods=['GET'])
-@login_required
-def edit_waitlist():
-    restaurant_id = request.values['restaurant_id']
-    customer_id = request.values['customer_id']
-    party_datetime = request.values['party_datetime']
-    con = get_db()
-    cur = con.cursor()
-    cur.execute("select * from waitlist WHERE restaurant_id=%s AND customer_id=%s AND party_datetime=%s LIMIT 1", (restaurant_id, customer_id, party_datetime))
-    waitlist = cur.fetchone()
-    return render_template('editwaitlist.html', waitlist=waitlist, url='index')
 
 
 @app.route('/entercustomer', methods=['GET', 'POST'])
@@ -221,10 +172,6 @@ def edit_waitlist():
 def entercustomer():
     return render_template('entercustomer.html', url="customer")
 
-@app.route('/enterparty')
-@login_required
-def new_party():
-    return render_template('enterparty.html', url = 'waitlist')
 
 
 
@@ -299,106 +246,9 @@ def add_customer_to_waitlist():
             return render_template("waitlistlist.html", url = "/")
             con.close()
 
-@app.route('/addrecparty', methods=['POST', 'GET'])
-@login_required
-def addrecparty():
-    if request.method == 'POST':
-        try:
-            size = request.form['size']
-            customer_id= request.form['customer_id']
-            party_datetime= request.form['party_datetime']
-            table_id= request.form['table_id']
-            restaurant_id= request.form['restaurant_id']
-            seated_datetime= request.form['seated_datetime']
-            finish_at= request.form['finish_at']
-          
-            
 
-            with get_db() as con:
-                cur = con.cursor()    
-                cur.execute("INSERT INTO party VALUES (%s, %s, %s, %s, %s, %s, %s)", (size, customer_id, party_datetime, table_id, restaurant_id, seated_datetime, finish_at))
-                con.commit()
-                msg = "Record successfully added"
-        except:
-            con.rollback()
-            msg = "error in insert operation"
 
-        finally:
-            return render_template("enterparty.html", msg=msg, url = "waitlist")
-            con.close()
 
-@app.route('/updatenotification', methods=['POST', 'GET'])
-@login_required
-def update_notification():
-    if request.method == 'POST':
-        try:
-            restaurant_id= request.form['restaurant_id']
-            customer_id= request.form['customer_id']
-            sent_at = request.form['sent_at']
-            notif_type = request.form['type']
-            body = request.form['body']
-
-            con = get_db()
-            cur = con.cursor()
-            pdb.set_trace()
-            cur.execute("UPDATE notification (body, type) VALUES (%s, %s) WHERE restaurant_id = %s AND customer_id = %s AND sent_at = %s", (body, notif_type, restaurant_id, customer_id, sent_at));
-            cur.execute("select * FROM notification WHERE sent_at = %s AND restaurant_id=%s", (sent_at, customer_id));
-            con.commit()
-            msg = "Record successfully updated"
-        except:
-            con.rollback()
-            msg = "error in update operation"
-
-        finally:
-            return render_template("result.html", msg=msg, url = "/")
-            con.close()
-
-@app.route('/updatewaitlist', methods=['POST', 'GET'])
-@login_required
-def update_waitlist():
-    if request.method == 'POST':
-        try:
-            restaurant_id= request.form['restaurant_id']
-            customer_id= request.form['customer_id']
-            party_datetime = datetime.strptime(request.form['party_datetime'], "%Y-%m-%d %H:%M:%S")
-            listed_at = datetime.strptime(request.form['listed_at'], "%Y-%m-%d %H:%M:%S")
-            unlisted_at = datetime.strptime(request.form['unlisted_at'], "%Y-%m-%d %H:%M:%S")
-            con = get_db()
-            cur = con.cursor()
-            pdb.set_trace()
-            cur.execute("UPDATE waitlist VALUES (%s, %s) WHERE restaurant_id = %s AND customer_id = %s AND party_datetime = %s", (listed_at, unlisted_at, restaurant_id, customer_id, party_datetime));
-            con.commit()
-            msg = "Record successfully updated"
-        except:
-            con.rollback()
-            msg = "error in update operation"
-
-        finally:
-            return render_template("result.html", msg=msg, url = "/")
-            con.close()
-
-@app.route('/addrecwaitlist', methods=['POST', 'GET'])
-@login_required
-def addrecwaitlist():
-    if request.method == 'POST':
-        try:
-            restaurant_id = request.form['restaurant_id']
-            customer_id= request.form['customer_id']
-            party_datetime= request.form['party_datetime']
-            listed_at= request.form['listed_at']
-            unlisted_at= request.form['unlisted_at']
-            with get_db() as con:
-                cur = con.cursor()    
-                cur.execute("INSERT INTO waitlist VALUES (%s, %s, %s, %s, %s)", (restaurant_id, customer_id, party_datetime, listed_at, unlisted_at))
-                con.commit()
-                msg = "Record successfully added"
-        except:
-            con.rollback()
-            msg = "error in insert operation"
-
-        finally:
-            return render_template("enterwaitlist.html", msg=msg, url = "/")
-            con.close()
 
 
 @app.route('/addrecmanage', methods=['POST', 'GET'])
@@ -589,77 +439,8 @@ def unlistcustomer():
             return render_template("result.html", msg=msg, url = "/")
             con.close()
 
-@app.route('/deletewaitlist', methods=['POST', 'GET'])
-@login_required
-def deletewaitlist():
-    if request.method == 'POST':
 
-        msg = "Record successfully Deleted"
-        try:
-            restaurant_id= request.form['restaurant_id']
-            customer_id = request.form['customer_id']
-            party_datetime = request.form['party_datetime']
-         
-            with get_db() as con:
-                cur = con.cursor()    
-                cur.execute("DELETE  from waitlist where restaurant_id= %s and customer_id = %s and party_datetime = %s ", (restaurant_id, customer_id, party_datetime))
-                con.commit()
-                msg = "Record successfully Deleted"
-        except:
-            con.rollback()
-            msg = "error in delete operation"
 
-        finally:
-            return render_template("result.html", msg=msg, url = "/")
-            con.close()
-
-@app.route('/deleteparty', methods=['POST', 'GET'])
-@login_required
-def deleteparty():
-    if request.method == 'POST':
-
-        msg = "Record successfully Deleted"
-        try:
-            customer_id= request.form['customer_id']
-            party_datetime= request.form['party_time']
-        
-            with get_db() as con:
-                cur = con.cursor()    
-                cur.execute("DELETE  from party where customer_id= %s AND party_datetime= %s", (customer_id, party_datetime))
-                con.commit()
-                msg = "Record successfully Deleted"
-        except:
-            con.rollback()
-            msg = "error in delete operation"
-
-        finally:
-            return render_template("result.html", msg=msg, url = "waitlist")
-            con.close()
-
-@app.route('/deletenotification', methods=['POST', 'GET'])
-@login_required
-def deletenotification():
-    if request.method == 'POST':
-
-        msg = "Record successfully Deleted"
-        try:
-            
-            sent_at= request.form['sent_at']
-            restaurant_id= request.form['restaurant_id']
-            customer_id= request.form['customer_id']
-        
-            with get_db() as con:
-                cur = con.cursor()    
-                cur.execute("DELETE  from notification where sent_at=%s AND restaurant_id =%s and customer_id= %s", (sent_at, restaurant_id, customer_id))
-                con.commit()
-                msg = "Record successfully Deleted"
-        except:
-            con.rollback()
-            msg = "error in delete operation"
-
-        finally:
-            return render_template("result.html", msg=msg, url = "waitlist")
-            con.close()
 
 
     
@@ -849,14 +630,11 @@ def updaterestaurant():
 @login_required
 def addrecupdaterestaurant():
     if request.method == 'POST':
-
         msg = "Record successfully added"
         try:
             restaurant_id = request.form['update_id']
             name= request.form['name']
             old_id = request.form['old_id']
-           
-
             with get_db() as con:
                 cur = con.cursor()    
                 cur.execute("UPDATE restaurant SET restaurant_id = %s, name = %s WHERE restaurant_id = %s", (restaurant_id, name, old_id))
@@ -869,9 +647,3 @@ def addrecupdaterestaurant():
         finally:
             return render_template("restaurant.html")
             con.close()
-        
-
-
-
-if __name__ == '__main__':
-    app.run(debug=True)

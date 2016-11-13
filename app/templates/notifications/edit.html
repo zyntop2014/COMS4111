@@ -1,7 +1,7 @@
 {% extends "layouts/base.html" %}
 {% block content %}
-<form action = "{{ url_for('update_notification') }}" method = "POST">
-  <h3>Admin Information</h3>
+<form action = "{{ url_for('notifications.update') }}" method = "POST">
+  <h3>Notification</h3>
   body<br>
   <input type = "text" name = "body" value = "{{ notification[0] }}" /><br>
   type<br>
