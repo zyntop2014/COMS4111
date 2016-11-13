@@ -13,9 +13,14 @@ def main():
 @mod_customer.route('/')
 @login_required
 def index():
-    cur = db.engine.execute("SELECT * FROM customer ORDER BY customer_id")
-    rows = cur.fetchall();
-    return render_template("customer/index.html", rows=rows)
+    if request.values.has_key('customer_id') and len(request.values['customer_id']) > 0:
+        cur = db.engine.execute("select * from (SELECT * FROM customer ORDER BY customer_id) c where c.customer_id =%s", request.values['customer_id'])
+        rows = cur.fetchall();
+        return render_template("customer/index.html", rows=rows)
+    else:
+        cur = db.engine.execute("SELECT * FROM customer ORDER BY customer_id")
+        rows = cur.fetchall();
+        return render_template("customer/index.html", rows=rows)
 
 @mod_customer.route('/new', methods=['GET'])
 @login_required
