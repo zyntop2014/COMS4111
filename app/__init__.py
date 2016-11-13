@@ -32,6 +32,8 @@ app.register_blueprint(mod_notification)
 app.register_blueprint(auth_mod)
 app.register_blueprint(mod_waitlist)
 app.register_blueprint(mod_party)
+# include other route file here 
+#app.register_blueprint(<your file>)
 
 @app.route('/welcome')
 def welcome():
