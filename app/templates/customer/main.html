@@ -1,53 +1,44 @@
-{% extends "mainlayout.html" %}
+{% extends "layouts/base.html" %}
 {% block content %}
 <!-- Page Features -->
 <div class="row text-center">
-
   <div class="col-md-3 col-sm-6 hero-feature">
     <div class="thumbnail">
-      <img src="" alt="" height="400" width="420">
       <div class="caption">
         <h3>Add new customers</h3>
-
         <p>
-        <a href="entercustomer" class="btn btn-primary">Add new</a> 
+        <a href={{ url_for('customers.new') }} class="btn btn-primary">Add new</a> 
         </p>
       </div>
     </div>
   </div>
-
   <div class="col-md-3 col-sm-6 hero-feature">
     <div class="thumbnail">
-      <img src="" alt="" height="400" width="420">
       <div class="caption">
         <h3>Show Full Customer List</h3>
         <p>
-        <a href="customerlist" class="btn btn-primary">Display</a> 
+        <a href={{ url_for('customers.index') }} class="btn btn-primary">Display</a> 
         </p>
 
       </div>
     </div>
   </div>
-
   <div class="col-md-3 col-sm-6 hero-feature">
     <div class="thumbnail">
-      <img src="" alt="" height="400" width="420">
       <div class="caption">
         <h3>Search Customer Basic Information</h3>
         <p>
-        <a href="search" class="btn btn-primary">Search</a> 
+        <a href={{ url_for('customers.search') }} class="btn btn-primary">Search</a> 
         </p>
       </div>
     </div>
   </div>
-
   <div class="col-md-3 col-sm-6 hero-feature">
     <div class="thumbnail">
-      <img src="" alt="" height="400" width="420">
       <div class="caption">
         <h3>Search Customer Dining Information</h3>
         <p>
-        <a href="dinning" class="btn btn-primary">Search</a> 
+        <a href={{ url_for('customers.dinning') }} class="btn btn-primary">Search</a>
         </p>
       </div>
     </div>

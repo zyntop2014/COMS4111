@@ -1,21 +1,15 @@
-{% extends "mainlayout.html" %}
+{% extends "layouts/base.html" %}
 {% block content %}
-<form action = "{{ url_for('addreccustomer') }}" method = "POST">
+<form action = "{{ url_for('customers.create') }}" method = "POST">
   <h3>Enter Customer Information</h3>
-
   Customer_ID<br>
   <input type = "INT" name = "id" /><br>
-
   First_Name<br>
   <input type = "text" name = "first_nm" /></br>
-
   Last_Name<br>
   <input type = "text" name = "last_nm" /></br>
-
-
   Phone_number<br>
   <input type = "text" name = "phone" /><br>
-
   Customer_email<br>
   <input type = "text" name = "email" /><br>
   <input type = "submit" value = "submit" /><br>

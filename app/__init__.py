@@ -26,12 +26,14 @@ from app.views.notification import mod_notification
 from app.views.auth import auth_mod
 from app.views.waitlist import mod_waitlist
 from app.views.party import mod_party
+from app.views.customer import mod_customer
 
 # Register blueprint(s)
 app.register_blueprint(mod_notification)
 app.register_blueprint(auth_mod)
 app.register_blueprint(mod_waitlist)
 app.register_blueprint(mod_party)
+app.register_blueprint(mod_customer)
 # include other route file here 
 #app.register_blueprint(<your file>)
 

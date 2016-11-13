@@ -1,4 +1,4 @@
-{% extends "mainlayout.html" %}
+{% extends "layouts/base.html" %}
 {% block content %}
 <h2 align="center"> Customer Information </h2>
 <div class="table-responsive-vertical shadow-z-1">
@@ -14,7 +14,6 @@
       </tr>
     </thead>
     <tbody>
-
       {% for row in rows %}
       <tr>
         <td>{{row[0]}}</td>
@@ -22,30 +21,21 @@
         <td> {{row[2]}}</td>
         <td>{{row[3]}}</td>
         <td>{{row[4]}}</td>
-
         <td>
-
-          <form action="{{ url_for('deletecustomer') }}" method=post class=deletecustomer>
+          <form action="{{ url_for('customers.delete') }}" method=post class=deletecustomer>
             <input type = hidden name = "id" value = "{{row[0]}}"/>
             <input type=submit value = Delete></input>
           </form>
-          </td>
-
-          <td>
-          <form action="{{ url_for('updatecustomer') }}" method=post class=updatecustomer>
-             <input type = hidden name = "old_id" value = "{{row[0]}}"/>
-            <input type=submit value = Update></input>
-          </form>
-
-
         </td>
-
+        <td>
+          <form action="{{ url_for('customers.edit') }}" method=get>
+            <input type = hidden name = "id" value = "{{row[0]}}"/>
+            <input type=submit value = Edit></input>
+          </form>
+        </td>
         <td>{{msg}}</td>
-
-
       </tr>
       {% endfor %}
-
     </tbody>
   </table>
 </div>

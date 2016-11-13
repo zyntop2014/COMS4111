@@ -1,0 +1,18 @@
+{% extends "layouts/base.html" %}
+{% block content %}
+<form action = "{{ url_for('customers.update') }}" method = "POST">
+  <h3>Enter Customer Information</h3>
+  <input type = hidden name = "old_id" value = "{{ customer[0] }}" />
+  Customer_ID<br>
+  <input type = "INT" name = "update_id" value = "{{ customer[0] }}" /><br>
+  First_Name<br>
+  <input type = "text" name = "first_nm" value = "{{ customer[1] }}" /></br>
+  Last_Name<br>
+  <input type = "text" name = "last_nm" value = "{{ customer[2] }}" /></br>
+  Phone_number<br>
+  <input type = "text" name = "phone" value = "{{ customer[3] }}" /><br>
+  Customer_email<br>
+  <input type = "text" name = "email" value = "{{ customer[4] }}" /><br>
+  <input type = "submit" value = "Update" /><br>
+</form>
+{% endblock %}

@@ -81,32 +81,6 @@ def restaurant():
     return render_template('restaurant.html')
 
 
-@app.route('/dinning')
-@login_required
-def dinning():
-    con = get_db()
-    cur = con.cursor()
-    cur.execute("SELECT c.customer_id, c.first_name, c.last_name, r.restaurant_id, r.name, t.count FROM (SELECT p.customer_id, p.restaurant_id, COUNT(p.party_datetime) FROM party p, restaurant r WHERE p.restaurant_id = r.restaurant_id GROUP BY p.customer_id, p.restaurant_id ORDER BY customer_id, restaurant_id) t, customer c,restaurant r WHERE t.customer_id = c.customer_id AND r.restaurant_id = t.restaurant_id")
-    rows = cur.fetchall();
-    return render_template('dinning.html', rows= rows)
-
-@app.route('/customer')
-@login_required
-def customer():
-    return render_template('customer.html')
-
-
-@app.route('/customerlist')
-@login_required
-def list():
-    con = get_db()
-    cur = con.cursor()
-    cur.execute("SELECT * FROM customer ORDER BY customer_id")
-    rows = cur.fetchall();
-    return render_template("customerlist.html", rows=rows)
-
-
-
 @app.route('/restaurantlist')
 @login_required
 def retaurantlist():
@@ -167,10 +141,6 @@ def add_customer_waitlist():
 
 
 
-@app.route('/entercustomer', methods=['GET', 'POST'])
-@login_required
-def entercustomer():
-    return render_template('entercustomer.html', url="customer")
 
 
 
@@ -276,31 +246,6 @@ def addrecmanage():
             con.close()
 
 
-@app.route('/addreccustomer', methods=['POST', 'GET'])
-@login_required
-def addreccustomer():
-    if request.method == 'POST':
-
-        msg = "Record successfully added"
-        try:
-            idn= request.form['id']
-            first_nm = request.form['first_nm']
-            last_nm= request.form['last_nm']
-            phone = request.form['phone']
-            email = request.form['email']
-
-            with get_db() as con:
-                cur = con.cursor()    
-                cur.execute("INSERT INTO customer VALUES (%s, %s, %s, %s, %s)", (idn,first_nm, last_nm, phone, email))
-                con.commit()
-                msg = "Record successfully added"
-        except:
-            con.rollback()
-            msg = "error in insert operation"
-
-        finally:
-            return render_template("entercustomer.html", msg=msg, url = "customer")
-            con.close()
 
 @app.route('/addrectable', methods=['POST', 'GET'])
 @login_required
@@ -312,9 +257,6 @@ def addrectable():
             table_id= request.form['table_id']
             seats= request.form['seats']
             restaurant_id = request.form['restarant_id']
-            
-           
-
             with get_db() as con:
                 cur = con.cursor()    
                 cur.execute("INSERT INTO restaurant_table VALUES (%s, %s, %s)", (table_id, seats, restaurant_id))
@@ -367,31 +309,6 @@ def searchtable():
         rows= cur.fetchall();
         return render_template('searchtable.html', rows1 = rows)
     return render_template('searchtable.html', rows1 = [])
-
-@app.route('/search', methods=['GET', 'POST'])
-@login_required
-def search():
-    if request.method == "POST":
-        db = get_db()
-        cur=db.cursor()
-        customer_id= request.form['customer_id']
-        cur.execute("select * from customer where customer_id= %s", [customer_id])
-        rows= cur.fetchall();
-        return render_template('search.html', rows1 = rows)
-    return render_template('search.html', rows1 = [])
-        
-@app.route('/search2', methods=['GET', 'POST'])
-@login_required
-def search2():
-    if request.method == "POST":
-        db = get_db()
-        cur=db.cursor()
-        customer_id= request.form['customer_id']
-        cur.execute("select * from customer where customer_id= %s", [customer_id])
-        rows= cur.fetchall();
-        return render_template('search.html', rows2 = rows)
-    return render_template('search.html', rows2 = [])   
-
 
 @app.route('/deleteadmin', methods=['POST', 'GET'])
 @login_required
@@ -495,64 +412,8 @@ def deleterestaurant():
             return render_template("result.html", msg=msg, url = "restaurant")
             con.close()
 
-@app.route('/deletecustomer', methods=['POST', 'GET'])
-@login_required
-def deletecustomer():
-    if request.method == 'POST':
 
-        msg = "Record successfully Deleted"
-        try:
-            id_admin= request.form['id']
-            print id_admin
-            
-        
 
-            with get_db() as con:
-                cur = con.cursor()    
-                cur.execute("DELETE  from customer where customer_id= %s", (id_admin,))
-                con.commit()
-                msg = "Record successfully Deleted"
-        except:
-            con.rollback()
-            msg = "error in delete operation"
-
-        finally:
-            return render_template("result.html", msg=msg, url = "customer")
-            con.close()
-
-@app.route('/updatecustomer', methods=['POST', 'GET'])
-@login_required
-def updatecustomer():
-    old_id = request.form['old_id']
-    return render_template("updatecustomer.html", old_id = old_id)
-
-@app.route('/addrecupdatecustomer', methods=['POST', 'GET'])
-@login_required
-def addrecupdatecustomer():
-    if request.method == 'POST':
-
-        msg = "Record successfully added"
-        try:
-            customer_id = request.form['update_id']
-            first_name= request.form['first_nm']
-            last_name = request.form['last_nm']
-            phone= request.form['phone']
-            email = request.form['email']
-            old_id = request.form['old_id']
-           
-
-            with get_db() as con:
-                cur = con.cursor()    
-                cur.execute("UPDATE customer SET customer_id = %s, first_name = %s, last_name = %s, phone_number = %s, customer_email = %s WHERE customer_id = %s", (customer_id, first_name, last_name, phone, email, old_id))
-                con.commit()
-                msg = "Record successfully updated"
-        except:
-            con.rollback()
-            msg = "error in update operation"
-
-        finally:
-            return render_template("customer.html")
-            con.close()
 
 @app.route('/updatetable', methods=['POST', 'GET'])
 @login_required
