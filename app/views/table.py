@@ -22,10 +22,29 @@ def index():
 @login_required
 def search():
     if request.method == "POST":
-        seats= request.form['seats']
-        cur = db.engine.execute("select r.restaurant_id, r.name, rt.table_id, rt.seats from restaurant_table rt, restaurant r where rt.restaurant_id = r.restaurant_id and rt.seats >= %s ", [seats])
-        rows= cur.fetchall();
-        return render_template('tables/search.html', rows1 = rows)
+        if request.values.has_key('seats') and len(request.values['seats']) > 0:
+            seats= request.form['seats']
+            print seats
+            condition= request.form.get('condition')
+            print condition
+            if condition =="equal to":
+                cur = db.engine.execute("select r.restaurant_id, r.name, rt.table_id, rt.seats from restaurant_table rt, restaurant r where rt.restaurant_id = r.restaurant_id and rt.seats = %s ", [seats])
+                rows= cur.fetchall();
+            elif condition =="at least":
+                cur = db.engine.execute("select r.restaurant_id, r.name, rt.table_id, rt.seats from restaurant_table rt, restaurant r where rt.restaurant_id = r.restaurant_id and rt.seats >= %s ", [seats])
+                rows= cur.fetchall();
+            elif condition =="at most":
+                cur = db.engine.execute("select r.restaurant_id, r.name, rt.table_id, rt.seats from restaurant_table rt, restaurant r where rt.restaurant_id = r.restaurant_id and rt.seats <= %s ", [seats])
+                rows= cur.fetchall();
+            else:
+                cur = db.engine.execute("select r.restaurant_id, r.name, rt.table_id, rt.seats from restaurant_table rt, restaurant r where rt.restaurant_id = r.restaurant_id and rt.seats ")
+                rows= cur.fetchall();
+            
+            return render_template('tables/search.html', rows1 = rows)
+        else:
+            cur = db.engine.execute("select r.restaurant_id, r.name, rt.table_id, rt.seats from restaurant_table rt, restaurant r where rt.restaurant_id = r.restaurant_id")
+            rows= cur.fetchall();
+            return render_template('tables/search.html', rows1 = rows)
     return render_template('tables/search.html', rows1 = [])
 
 @mod_table.route('/new')
