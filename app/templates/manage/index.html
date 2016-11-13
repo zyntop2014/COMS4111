@@ -1,0 +1,41 @@
+{% extends "layouts/base.html" %}
+{% block content %}
+<h2 align="center"> Management Information </h2>
+<div class="table-responsive-vertical shadow-z-1">
+  <!-- Table starts here -->
+  <table id="table" class="table table-hover table-mc-light-blue">
+    <thead>
+      <tr>
+        <th><b>Admin ID</b></th>
+        <th><b>Admin email</b></th>
+        <th><b>Restaurant ID</b></th>
+        <th><b>Restaurant Name</b></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in rows %}
+      <tr>
+        <td > {{row[0]}}</td>
+        <td>{{row[1]}}</td>
+        <td> {{row[2]}}</td>
+        <td>{{row[3]}}</td>
+        <td>
+          <form action="{{ url_for('manage.delete') }}" method=post>
+            <input type = hidden name = "admin_id" value = "{{row[0]}}"/>
+            <input type = hidden name = "restaurant_id" value = "{{row[2]}}"/>
+            <input type=submit value = Delete></input>
+          </form>
+        </td>
+          <td>
+          <form action="{{ url_for('manage.edit') }}" method=get>
+            <input type = hidden name = "admin_id" value = "{{row[0]}}"/>
+            <input type = hidden name = "restaurant_id" value = "{{row[2]}}"/>
+            <input type=submit value = Edit></input>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

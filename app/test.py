@@ -83,10 +83,6 @@ def add_customer_waitlist():
     con.commit()
     return render_template('waitlistcustomer.html', restaurants=restaurants, customers=customers, url = 'index')
 
-@app.route('/entermanage')
-@login_required
-def new_manage():
-    return render_template('entermanage.html', url = 'admin')
 
 
 @app.route('/add_customer_to_waitlist', methods=['POST'])
@@ -114,29 +110,6 @@ def add_customer_to_waitlist():
             return render_template("waitlistlist.html", url = "/")
             con.close()
 
-@app.route('/addrecmanage', methods=['POST', 'GET'])
-@login_required
-def addrecmanage():
-    if request.method == 'POST':
-
-        
-        try:
-            
-            idn = request.form['admin_id']
-            res_id = request.form['res_id']
-
-            with get_db() as con:
-                cur = con.cursor()    
-                cur.execute("INSERT INTO manage VALUES (1, 1)")
-                con.commit()
-                msg = "Record successfully added"
-        except:
-            con.rollback()
-            msg = "error in insert operation"
-
-        finally:
-            return render_template("entermanage.html", msg=msg, url = "admin")
-            con.close()
 
 
 
