@@ -13,9 +13,14 @@ def main():
 @mod_restaurant.route('/')
 @login_required
 def index():
-    cur = db.engine.execute("SELECT r.restaurant_id, r.name, AVG(w.unlisted_at - w.listed_at) AS avg_waiting FROM restaurant r LEFT JOIN waitlist w ON r.restaurant_id = w.restaurant_id GROUP BY r.restaurant_id ORDER BY avg_waiting")
-    rows = cur.fetchall();
-    return render_template("restaurants/index.html", rows=rows)
+    if request.values.has_key('restaurant_id') and len(request.values['restaurant_id']) > 0:
+        cur = db.engine.execute("SELECT * FROM (SELECT r.restaurant_id, r.name, AVG(w.unlisted_at - w.listed_at) AS avg_waiting FROM restaurant r LEFT JOIN waitlist w ON r.restaurant_id = w.restaurant_id GROUP BY r.restaurant_id ORDER BY avg_waiting) AS r WHERE r.restaurant_id = %s", request.values['restaurant_id'])
+        rows = cur.fetchall();
+        return render_template("restaurants/index.html", rows=rows)
+    else:
+        cur = db.engine.execute("SELECT r.restaurant_id, r.name, AVG(w.unlisted_at - w.listed_at) AS avg_waiting FROM restaurant r LEFT JOIN waitlist w ON r.restaurant_id = w.restaurant_id GROUP BY r.restaurant_id ORDER BY avg_waiting")
+        rows = cur.fetchall();
+        return render_template("restaurants/index.html", rows=rows)
 
 @mod_restaurant.route('/new')
 @login_required
