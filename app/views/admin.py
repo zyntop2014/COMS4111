@@ -13,9 +13,14 @@ def main():
 @mod_admin.route('/')
 @login_required
 def index():
-    cur = db.engine.execute("select * from administrator ORDER BY admin_id")
-    rows = cur.fetchall();
-    return render_template("admins/index.html", rows=rows)
+    if request.values.has_key('admin_id') and len(request.values['admin_id']) > 0:
+        cur = db.engine.execute("select * from administrator where admin_id = %s", request.values["admin_id"])
+        rows = cur.fetchall();
+        return render_template("admins/index.html", rows=rows)
+    else:
+        cur = db.engine.execute("select * from administrator ORDER BY admin_id")
+        rows = cur.fetchall();
+        return render_template("admins/index.html", rows=rows)
 
 @mod_admin.route('/new')
 @login_required
