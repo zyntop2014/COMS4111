@@ -95,5 +95,5 @@ def update():
             trans.rollback()
             msg = "error in update operation"
         finally:
-            return render_template("result.html", msg=msg, url = url_for('admins.main'))
             connection.close()
+            return render_template("result.html", msg=msg, url = url_for('admins.main'))

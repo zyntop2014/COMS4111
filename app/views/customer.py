@@ -55,8 +55,8 @@ def create():
             trans.rollback()
             msg = "error in insert operation"
         finally:
-            return render_template("result.html", msg=msg, url=url_for('customers.main'))
             connection.close()
+            return render_template("result.html", msg=msg, url=url_for('customers.main'))
 
 @mod_customer.route('/delete', methods=['POST'])
 @login_required
@@ -75,8 +75,8 @@ def delete():
             trans.rollback()
             msg = "error in delete operation"
         finally:
-            return render_template("result.html", msg=msg, url = url_for('customers.main'))
             connection.close()
+            return render_template("result.html", msg=msg, url = url_for('customers.main'))
 
 @mod_customer.route('/update', methods=['POST'])
 @login_required
@@ -99,8 +99,8 @@ def update():
             trans.rollback()
             msg = "error in update operation"
         finally:
-            return render_template("result.html", msg=msg, url = url_for('customers.main'))
             connection.close()
+            return render_template("result.html", msg=msg, url = url_for('customers.main'))
 
 @mod_customer.route('/search', methods=['GET', 'POST'])
 @login_required

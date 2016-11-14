@@ -39,7 +39,6 @@ def search():
             else:
                 cur = db.engine.execute("select r.restaurant_id, r.name, rt.table_id, rt.seats from restaurant_table rt, restaurant r where rt.restaurant_id = r.restaurant_id and rt.seats ")
                 rows= cur.fetchall();
-            
             return render_template('tables/search.html', rows1 = rows)
         else:
             cur = db.engine.execute("select r.restaurant_id, r.name, rt.table_id, rt.seats from restaurant_table rt, restaurant r where rt.restaurant_id = r.restaurant_id")
@@ -79,8 +78,8 @@ def create():
             trans.rollback()
             msg = "error in insert operation"
         finally:
-            return render_template("result.html", msg=msg, url = url_for('restaurants.main') )
             connnection.close()
+            return render_template("result.html", msg=msg, url = url_for('restaurants.main') )
 
 @mod_table.route('/update', methods=['POST'])
 @login_required
@@ -102,8 +101,8 @@ def update():
             trans.rollback()
             msg = "error in update operation"
         finally:
-            return render_template("result.html", msg=msg, url = url_for('restaurants.main') )
             connection.close()
+            return render_template("result.html", msg=msg, url = url_for('restaurants.main') )
 
 @mod_table.route('/delete', methods=['POST'])
 @login_required
@@ -122,5 +121,5 @@ def delete():
             trans.rollback()
             msg = "error in delete operation"
         finally:
-            return render_template("result.html", msg=msg, url = url_for('restaurants.main') )
             connection.close()
+            return render_template("result.html", msg=msg, url = url_for('restaurants.main') )
