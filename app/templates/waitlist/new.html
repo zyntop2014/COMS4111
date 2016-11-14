@@ -2,25 +2,16 @@
 {% block content %}
 <form action = "{{ url_for('waitlists.create') }}" method = "POST">
   <h3>Waitlist Information</h3>
-
   restaurant_id<br>
   <input type = "INT" name = "restaurant_id" /><br>
-
   customer_id<br>
   <input type = "INT" name = "customer_id" /></br>
-
-
   party_datetime<br>
   <input type = "TIMESTAMP" name = "party_datetime" /><br>
-
   listed_at<br>
   <input type = "TIMESTAMP" name = "listed_at" /><br>
-
   unlisted_at<br>
   <input type = "TIMESTAMP" name = "unlisted_at" /><br>
-
-
   <input type = "submit" value = "submit" /><br>
-
 </form>
 {% endblock %}

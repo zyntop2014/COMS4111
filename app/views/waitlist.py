@@ -1,6 +1,8 @@
 from flask import Blueprint, request, render_template, flash, g, session, redirect, url_for
 from app.decorators import login_required
+from app.utils import get_value
 from app import db
+import pdb
 
 mod_waitlist = Blueprint('waitlists', __name__, url_prefix='/waitlists', template_folder='templates')
 
@@ -46,18 +48,16 @@ def create():
             customer_id= request.form['customer_id']
             party_datetime= request.form['party_datetime']
             listed_at= request.form['listed_at']
-            unlisted_at= request.form['unlisted_at']
-            unlisted_at = unlisted_at if len(unlisted_at) > 0  else None
+            unlisted_at= get_value(request,'unlisted_at')
             db.engine.execute("INSERT INTO waitlist (restaurant_id, customer_id, party_datetime, listed_at, unlisted_at) VALUES (%s, %s, %s, %s, %s)", (restaurant_id, customer_id, party_datetime, listed_at, unlisted_at))
             trans.commit()
             msg = "Record successfully added"
         except:
             trans.rollback()
             msg = "error in insert operation"
-
         finally:
-            return render_template("result.html", msg=msg, url = "/")
             connection.close()
+            return render_template("result.html", msg=msg, url = "/")
 
 @mod_waitlist.route('/update', methods=['POST', 'GET'])
 @login_required
@@ -66,21 +66,23 @@ def update():
         connection = db.engine.connect()
         trans = connection.begin()
         try:
+            old_restaurant_id = request.form['old_restaurant_id']
+            old_customer_id = request.form['old_customer_id']
+            old_party_datetime = request.form['old_party_datetime']
             restaurant_id= request.form['restaurant_id']
             customer_id= request.form['customer_id']
-            party_datetime = datetime.strptime(request.form['party_datetime'], "%Y-%m-%d %H:%M:%S")
-            listed_at = datetime.strptime(request.form['listed_at'], "%Y-%m-%d %H:%M:%S")
-            unlisted_at = datetime.strptime(request.form['unlisted_at'], "%Y-%m-%d %H:%M:%S")
-            connection.execute("UPDATE waitlist VALUES (%s, %s) WHERE restaurant_id = %s AND customer_id = %s AND party_datetime = %s", (listed_at, unlisted_at, restaurant_id, customer_id, party_datetime));
+            party_datetime = request.form['party_datetime']
+            listed_at = request.form['listed_at']
+            unlisted_at = get_value(request, 'unlisted_at')
+            connection.execute("UPDATE waitlist SET restaurant_id = %s, customer_id = %s, party_datetime = %s, listed_at = %s, unlisted_at = %s WHERE restaurant_id = %s AND customer_id = %s AND party_datetime = %s", (restaurant_id, customer_id, party_datetime, listed_at, unlisted_at, old_restaurant_id, old_customer_id, old_party_datetime))
             trans.commit()
             msg = "Record successfully updated"
         except:
             trans.rollback()
             msg = "error in update operation"
-
         finally:
-            return render_template("result.html", msg=msg, url = "/")
             connection.close()
+            return render_template("result.html", msg=msg, url = "/")
 
 @mod_waitlist.route('/delete', methods=['POST', 'GET'])
 @login_required
@@ -100,5 +102,5 @@ def delete():
             trans.rollback()
             msg = "error in delete operation"
         finally:
-            return render_template("result.html", msg=msg, url = "/")
             connection.close()
+            return render_template("result.html", msg=msg, url = "/")

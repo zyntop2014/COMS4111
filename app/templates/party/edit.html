@@ -2,20 +2,22 @@
 {% block content %}
 <form action = "{{ url_for('party.update') }}" method = "POST">
   <h3>Edit Party</h3>
+  <input type = "hidden" name = "old_party_datetime" value="{{ party[2] }}"/><br>
+  <input type = "hidden" name = "old_customer_id" value="{{ party[1] }}"/><br>
   size<br>
-  <input type = "INT" name = "size" value='{{ party[0] }}' /><br>
+  <input type = "INT" name = "size" value="{{ party[0] }}" /><br>
   customer_id<br>
-  <input type = "INT" name = "customer_id" value='{{ party[1] }}'/><br>
+  <input type = "INT" name = "customer_id" value="{{ party[1] }}"/><br>
   party_datetime<br>
-  <input type = "timestamp" name = "party_datetime" value='{{ party[2] }}'/><br>
+  <input type = "timestamp" name = "party_datetime" value="{{ party[2] }}"/><br>
   table_id<br>
-  <input type = "INT" name = "table_id" value='{{ party[3] }}'/><br>
+  <input type = "INT" name = "table_id" value="{{ party[3] }}"/><br>
   restaurant_id<br>
-  <input type = "INT" name = "restaurant_id" value='{{ party[4] }}'/><br>
+  <input type = "INT" name = "restaurant_id" value="{{ party[4] }}"/><br>
   seated_datetime<br>
-  <input type = "timestamp" name = "seated_datetime" value='{{ party[5] }}'/><br>
+  <input type = "timestamp" name = "seated_datetime" value="{{ party[5] }}"/><br>
   finish_at <br>
-  <input type = "timestamp" name = "finish_at" value='{{ party[6] }}'/><br>
+  <input type = "timestamp" name = "finish_at" value="{{ party[6] }}"/><br>
   <input type = "submit" value = "submit" /><br>
 </form>
 {% endblock %}

@@ -1,25 +1,20 @@
 {% extends "layouts/base.html" %}
 {% block content %}
-<form action = "{{ url_for('waitlists.edit') }}" method = "POST">
+<form action = "{{ url_for('waitlists.update') }}" method = "POST">
   <h3>Update Waitlist Information</h3>
-
+  <input type = "hidden" name = "old_restaurant_id" value = "{{waitlist[0]}}" /><br>
+  <input type = "hidden" name = "old_customer_id" value = "{{waitlist[1]}}" /><br>
+  <input type = "hidden" name = "old_party_datetime" value = "{{waitlist[2]}}" /><br>
   restaurant_id<br>
-  <input type = "INT" name = "restaurant_id" value = {{waitlist[0]}} /><br>
-
+  <input type = "INT" name = "restaurant_id" value = "{{waitlist[0]}}" /><br>
   customer_id<br>
-  <input type = "INT" name = "customer_id" value = {{waitlist[1]}} /></br>
-
-
+  <input type = "INT" name = "customer_id" value = "{{waitlist[1]}}" /></br>
   party_datetime<br>
-  <input type = "text" name = "party_datetime" value = '{{waitlist[2].strftime("%Y-%m-%d %H:%M:%S")}}' /><br>
-
+  <input type = "text" name = "party_datetime" value = "{{waitlist[2]}}" /><br>
   listed_at<br>
-  <input type = "text" name = "listed_at" value = '{{waitlist[3].strftime("%Y-%m-%d %H:%M:%S")}}' /><br>
-
+  <input type = "text" name = "listed_at" value = "{{waitlist[3]}}" /><br>
   unlisted_at<br>
-  <input type = "text" name = "unlisted_at" value = '{{waitlist[4].strftime("%Y-%m-%d %H:%M:%S")}}' /><br>
-
-
+  <input type = "text" name = "unlisted_at" value = "{{waitlist[4]}}" /><br>
   <input type = "submit" value = "submit" /><br>
 
 </form>

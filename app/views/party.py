@@ -1,12 +1,11 @@
 from flask import Blueprint, request, render_template, flash, g, session, redirect, url_for
 from app.decorators import login_required
+from app.utils import get_value
 from app import db
 import pdb
 
 mod_party = Blueprint('party', __name__, url_prefix='/party', template_folder='templates' )
 
-def preprocess_string(time):
-    return time if len(time) > 0 else None
 @mod_party.route('/')
 @login_required
 def index():
@@ -38,10 +37,10 @@ def create():
             size = request.form['size']
             customer_id= request.form['customer_id']
             party_datetime= request.form['party_datetime']
-            table_id= preprocess_string(request.form['table_id'])
-            restaurant_id= preprocess_string(request.form['restaurant_id'])
-            seated_datetime= preprocess_string(request.form['seated_datetime'])
-            finish_at= preprocess_string(request.form['finish_at'])
+            table_id= get_value(request,'table_id')
+            restaurant_id= get_value(request,'restaurant_id')
+            seated_datetime= get_value(request,'seated_datetime')
+            finish_at= get_value(request, 'finish_at')
             db.engine.execute("INSERT INTO party VALUES (%s, %s, %s, %s, %s, %s, %s)", (size, customer_id, party_datetime, table_id, restaurant_id, seated_datetime, finish_at))
             trans.commit()
             msg = "Record successfully added"
@@ -50,8 +49,8 @@ def create():
             msg = "error in insert operation"
 
         finally:
-            return render_template("result.html", msg=msg, url = "/")
             connection.close()
+            return render_template("result.html", msg=msg, url = "/")
 
 @mod_party.route('/update', methods=['POST'])
 @login_required
@@ -60,25 +59,32 @@ def update():
         connection = db.engine.connect()
         trans = connection.begin()
         try:
+            old_customer_id= request.form['old_customer_id']
+            old_party_datetime = request.form['old_party_datetime']
             size = request.form['size']
             customer_id= request.form['customer_id']
             party_datetime = request.form['party_datetime']
-            connection.execute("UPDATE party (size, customer_id, party_datetime) VALUES (%s, %s, %s) WHERE customer_id = %s AND  party_datetime = %s", (size, customer_id, sent_at));
+            table_id = get_value(request, 'table_id')
+            restaurant_id = get_value(request, 'restaurant_id')
+            seated_datetime = get_value(request, 'seated_datetime')
+            finish_at = get_value(request, 'finish_at')
+            connection.execute("UPDATE party SET size=%s, customer_id=%s,party_datetime=%s,table_id=%s,restaurant_id=%s,seated_datetime=%s, finish_at=%s  WHERE customer_id = %s AND  party_datetime = %s", (size, customer_id, party_datetime, table_id, restaurant_id, seated_datetime, finish_at, old_customer_id, old_party_datetime))
             trans.commit()
             msg = "Record successfully updated"
         except:
             trans.rollback()
             msg = "error in update operation"
-
         finally:
-            return render_template("result.html", msg=msg, url = "/")
             connection.close()
+            return render_template("result.html", msg=msg, url = "/")
 
 @mod_party.route('/delete', methods=['POST'])
 @login_required
 def delete():
     if request.method == 'POST':
         msg = "Record successfully Deleted"
+        connection = db.engine.connect()
+        trans = connection.begin()
         try:
             customer_id= request.form['customer_id']
             party_datetime= request.form['party_time']
@@ -89,6 +95,6 @@ def delete():
             trans.rollback()
             msg = "error in delete operation"
         finally:
-            return render_template("result.html", msg=msg, url = "/")
             connection.close()
+            return render_template("result.html", msg=msg, url = "/")
 

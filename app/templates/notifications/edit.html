@@ -2,19 +2,19 @@
 {% block content %}
 <form action = "{{ url_for('notifications.update') }}" method = "POST">
   <h3>Notification</h3>
+  <input type = "hidden" name = "old_restaurant_id" value = "{{ notification[3] }}" /><br>
+  <input type = "hidden" name = "old_customer_id" value = "{{ notification[4] }}" /><br>
+  <input type = "hidden" name = "old_sent_at" value = "{{ notification[2] }}" /><br>
   body<br>
   <input type = "text" name = "body" value = "{{ notification[0] }}" /><br>
   type<br>
   <input type = "text" name = "type" value = "{{ notification[1] }}" /></br>
   sent_at<br>
-  {{ notification[2] }}
-  <input type = "hidden" name = "sent_at" value = "{{ notification[2] }}" /><br>
+  <input type = "timestamp" name = "sent_at" value = "{{ notification[2] }}" /><br>
   restaurant_id<br>
-  {{ notification[3] }}
-  <input type = "hidden" name = "restaurant_id" value = "{{ notification[3] }}" /><br>
+  <input type = "integer" name = "restaurant_id" value = "{{ notification[3] }}" /><br>
   customer_id<br>
-  {{ notification[4] }}
-  <input type = "hidden" name = "customer_id" value = "{{ notification[4] }}" /><br>
+  <input type = "integer" name = "customer_id" value = "{{ notification[4] }}" /><br>
   <input type = "submit" value = "submit"  /><br>
 </form>
 {% endblock %}
