@@ -7,10 +7,9 @@ BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
 # Define the database - we are working with
 # SQLite for this example
-SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:580430@localhost/database'
+#SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:580430@localhost/database'
 # PLEASE DO NOT WORK WITH THE PRODUCTION DB WHEN YOU ARE DEVELONG. AKA DO NOT UNCOMMENT LINE 12
 # USE YOUR LOCAL DB. ONLY IN THE GOOGLE ENGINE WE WILL UNCOMMENT NEXT LINE
-#SQLALCHEMY_DATABASE_URI = 'postgresql://yz3054:h7fmz@104.196.175.120/postgres'
 DATABASE_CONNECT_OPTIONS = {}
 
 # Application threads. A common general assumption is

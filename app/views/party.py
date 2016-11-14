@@ -6,12 +6,41 @@ import pdb
 
 mod_party = Blueprint('party', __name__, url_prefix='/party', template_folder='templates' )
 
-@mod_party.route('/')
+@mod_party.route('/', methods = ['GET', 'POST'])
 @login_required
 def index():
-    cur = db.engine.execute("select * from party")
-    rows = cur.fetchall();
-    return render_template("party/index.html", rows=rows)
+    if request.method == "POST":
+    	condition = request.form.get ("condition")
+    	if condition =="ongoing":
+    		cur = 	db.engine.execute("select * from party where seated_datetime is not null and finish_at is null")
+    		rows = cur.fetchall()
+
+    	if condition =="finished":
+    		cur = 	db.engine.execute("select * from party where seated_datetime is not null and finish_at is not null")
+    		rows = cur.fetchall()
+        	
+        if condition=="unseated":
+    		cur = 	db.engine.execute("select * from party where seated_datetime is null")
+    		rows = cur.fetchall()
+    
+        
+        return render_template("party/index.html", rows=rows)
+            
+    elif request.method == "GET":
+        if request.values.has_key('party'):
+            cur = db.engine.execute("select * from party where restaurant_id = %s and seated_datetime is NULL and finish_at is NULL", request.values["restaurant_id"])
+            rows = cur.fetchall();
+            return render_template("party/index.html", rows=rows)
+        else:
+            cur = db.engine.execute("select * from party where restaurant_id = %s", request.values["restaurant_id"])
+            rows = cur.fetchall();
+            return render_template("party/index.html", rows=rows)
+
+    else:
+        cur = db.engine.execute("SELECT  * from party")
+        rows = cur.fetchall()
+        return render_template("party/index.html", rows=rows)
+
 
 @mod_party.route('/new')
 @login_required
