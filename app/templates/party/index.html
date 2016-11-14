@@ -2,6 +2,28 @@
 {% block content %}
 <!-- Page Content -->
 <h2 align="center"> Party Information </h2>
+
+<form  method = "GET">
+  <h3>Filter by Restaurant Id</h3>
+  <input type = "INT" name = "restaurant_id" />
+  <input type="checkbox" name="party" value="Yes">Party is still on going<br>
+  <input type = "submit" value = "submit" /><br>
+</form>
+
+<br>
+
+
+<h3 > Sort Party Information </h3>
+<form action = "{{ url_for('party.index') }}" method = "POST">
+<select name="condition">
+    <option value="unseated"> Unseated </option>
+    <option value="ongoing">  On going </option>
+    <option value="finished"> Finished </option>
+  </select> 
+
+  <input type = "submit" value = "submit" /><br>
+
+
 <div class="table-responsive-vertical shadow-z-1">
   <!-- Table starts here -->
   <table id="table" class="table table-hover table-mc-light-blue">
