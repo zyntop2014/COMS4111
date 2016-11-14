@@ -14,19 +14,14 @@ def index():
     	if condition =="ongoing":
     		cur = 	db.engine.execute("select * from party where seated_datetime is not null and finish_at is null")
     		rows = cur.fetchall()
-
     	if condition =="finished":
     		cur = 	db.engine.execute("select * from party where seated_datetime is not null and finish_at is not null")
     		rows = cur.fetchall()
-        	
         if condition=="unseated":
     		cur = 	db.engine.execute("select * from party where seated_datetime is null")
     		rows = cur.fetchall()
-    
-        
         return render_template("party/index.html", rows=rows)
-            
-    elif request.method == "GET":
+    elif request.method == "GET" and request.values.has_key("restaurant_id"):
         if request.values.has_key('party'):
             cur = db.engine.execute("select * from party where restaurant_id = %s and seated_datetime is NULL and finish_at is NULL", request.values["restaurant_id"])
             rows = cur.fetchall();
@@ -35,7 +30,6 @@ def index():
             cur = db.engine.execute("select * from party where restaurant_id = %s", request.values["restaurant_id"])
             rows = cur.fetchall();
             return render_template("party/index.html", rows=rows)
-
     else:
         cur = db.engine.execute("SELECT  * from party")
         rows = cur.fetchall()
