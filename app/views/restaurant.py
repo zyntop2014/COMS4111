@@ -16,8 +16,6 @@ def index():
     if request.method == "POST":
         sort_type= request.form.get('sort_type')
         method= request.form.get('method')
-        print method
-        print sort_type
         if sort_type == "customer number":
             if method == "DESC":
                 cur = db.engine.execute("SELECT r.restaurant_id, r.name, AVG(w.unlisted_at - w.listed_at) AS avg_waiting, COUNT (w.customer_id) As avg_customer FROM restaurant r LEFT JOIN waitlist w ON r.restaurant_id = w.restaurant_id GROUP BY r.restaurant_id ORDER BY avg_customer DESC")
@@ -32,7 +30,6 @@ def index():
             cur = db.engine.execute(st)
             rows = cur.fetchall();
         return render_template("restaurants/index.html", rows=rows)
-            
     else:
         if request.values.has_key('restaurant_id') and len(request.values['restaurant_id']) > 0:
             cur = db.engine.execute("SELECT * FROM (SELECT r.restaurant_id, r.name, AVG(w.unlisted_at - w.listed_at) AS avg_waiting, COUNT (w.customer_id) As avg_customer  FROM restaurant r LEFT JOIN waitlist w ON r.restaurant_id = w.restaurant_id GROUP BY r.restaurant_id ORDER BY avg_waiting) AS r WHERE r.restaurant_id = %s", request.values['restaurant_id'])
@@ -72,8 +69,8 @@ def create():
             trans.rollback()
             msg = "error in insert operation"
         finally:
-            return render_template("result.html", msg=msg, url = url_for('restaurants.main'))
             connection.close()
+            return render_template("result.html", msg=msg, url = url_for('restaurants.main'))
 
 @mod_restaurant.route('/delete', methods=['POST'])
 @login_required
@@ -91,8 +88,8 @@ def delete():
             trans.rollback()
             msg = "error in delete operation"
         finally:
-            return render_template("result.html", msg=msg, url = url_for('restaurants.main'))
             connection.close()
+            return render_template("result.html", msg=msg, url = url_for('restaurants.main'))
 
 @mod_restaurant.route('/update', methods=['POST'])
 @login_required
@@ -112,5 +109,5 @@ def update():
             trans.rollback()
             msg = "error in update operation"
         finally:
-            return render_template("result.html", msg=msg, url = url_for('restaurants.main'))
             connection.close()
+            return render_template("result.html", msg=msg, url = url_for('restaurants.main'))
